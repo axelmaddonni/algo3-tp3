@@ -35,13 +35,7 @@ bool lin_search(std::vector<int> v, int x) {
   return false;
 }
 
-// Si no es isomorfismo devuelve -1, si no devuelve la cantidad de aristas del
-// subrafo inducido.
 int contar_aristas_isomorfismo(Grafo g1, Grafo g2, Isomorfismo iso) {
-  // Recordemos que no hace falta que los subgrafos inducidos sean iguales, si 
-  // no que uno tiene que estar metido adentro del otro.
-  bool g1_en_g2 = false;
-  bool g2_en_g1 = false;
   int aristas = 0;
   for (const auto p : iso) {
     for (const auto q : iso) {
@@ -49,26 +43,9 @@ int contar_aristas_isomorfismo(Grafo g1, Grafo g2, Isomorfismo iso) {
       int vg2 = p.second;
       int ug1 = q.first;
       int ug2 = q.second;
-      bool g1_con = lin_search(g1.adj_list[vg1], ug1);
-      // ug1 y vg1 estan conectados.
-      bool g2_con = lin_search(g2.adj_list[vg2], ug2);
-      // ug2 y vg2 estan conectados.
 
-      if (g1_con && !g2_con) {
-        // en g1 estan conectados, pero en g2 no => g2 \subset g1
-        if (g1_en_g2) { // imposible.
-          return -1; 
-        } else {
-          g2_en_g1 = true;
-        }
-      } else if (!g1_con && g2_con) {
-        // en g2 estan conectados, pero en g1 no => g1 \subset g2
-        if (g2_en_g1) { // imposible.
-          return -1; 
-        } else {
-          g1_en_g2 = true;
-        }
-      } else if (g1_con && g2_con) {
+      if (lin_search(g1.adj_list[vg1], ug1) && // ug1 y vg1 estan conectados.
+          lin_search(g2.adj_list[vg2], ug2)) { // ug2 y vg2 estan conectados.
         aristas++;
       }
     }
@@ -77,13 +54,34 @@ int contar_aristas_isomorfismo(Grafo g1, Grafo g2, Isomorfismo iso) {
   return aristas / 2; // conte todas 2 veces;
 }
 
+
+inline bool ordenado_asc(const Isomorfismo& iso) {
+  if (iso.size() < 2) {
+    return true;
+  }
+  for (unsigned int i = 1; i < iso.size(); i++) {
+    if (iso[i-1].first >= iso[i].first) {
+      return false;
+    }
+  }
+  return true;
+}
+
 void bt (Grafo g1, std::vector<int> vertices1, 
          Grafo g2, std::vector<int> vertices2,
          Isomorfismo iso) {
-  int aristas = contar_aristas_isomorfismo(g1, g2, iso);
-  if (aristas == -1) {
+  if (!ordenado_asc(iso)) {
+    // Si iso = [(a0,b0), (a1,b1), ..., (an,bn)] y [a0, ..., an] no esta ordenado
+    // ascendientemente, podemos considerar el reordenamiento
+    //      [(a'0,b'0), (a'1,b'1), ..., (a'n,b'n)]
+    // que es el mismo que antes solo que ahora a'0 < a'1 < ... < a'n. De esta
+    // manera, nos ahorramos considerar el mismo isomorfismos varias veces, y
+    // analizando solo la version en la que la primera coordenada esta ordenada
+    // ascendientemente.
     return;
-  } else if (aristas > solucion.aristas) {
+  }
+  int aristas = contar_aristas_isomorfismo(g1, g2, iso);
+  if (aristas > solucion.aristas) {
     solucion.isomorfismo = iso;
     solucion.aristas = aristas;
   }
