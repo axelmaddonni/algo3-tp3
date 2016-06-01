@@ -112,7 +112,6 @@ int main() {
 
   std::vector<std::pair<int, int>> aristas = 
     generar_isomorfismo(g1, g2, solucion.isomorfismo);
-    cout << "llegue" << endl;
 
   std::cout << solucion.isomorfismo.size() << " " << aristas.size() << std::endl;
   for (const auto p : solucion.isomorfismo) {
