@@ -7,16 +7,14 @@ MCS solucion;
 
 //Ordena los vertices de mayor a menor grado
 void sort_adj(std::vector<int> &lista, Grafo g){
-  int aux;
-  for (unsigned int i = 0; i < lista.size(); i++){		
-    for (unsigned int j = 0; j < lista.size()-1; j++){
-      if ( g.grados[lista[j]] < g.grados[lista[j+1]] ){
-        aux = lista[j];
-	lista[j] = lista[j+1];				
-	lista[j+1] = aux;
-      }			
-    }
-  }
+    int aux;
+    for (unsigned int i = 0; i < lista.size(); i++){		
+	for (unsigned int j = 0; j < lista.size()-1; j++){
+		if ( g.grados[lista[j]] < g.grados[lista[j+1]] ){
+			aux = lista[j];
+			lista[j] = lista[j+1];				
+			lista[j+1] = aux;
+		}			
 }
 
 void goloso (Grafo g1, std::vector<int> &vertices1, 
