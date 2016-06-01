@@ -5,28 +5,28 @@
 
 MCS solucion;
 
-void sort_adj(std::vector<int> &lista, Grafo g){
-  int aux;
-  for (unsigned int i = 0; i < lista.size(); i++){		
-    for (unsigned int j = 0; j < lista.size()-1; j++){
-    	if ( g.grados[lista[j]] < g.grados[lista[j+1]] ){
-    	  aux = lista[j];
-    	  lista[j] = lista[j+1];				
-    	  lista[j+1] = aux;
-      }			
-    }		
+//Devuelve el nodo de grado máximo
+int nodo_max_grado(std::vector<int> lista, Grafo g){
+  int max = lista[0];
+  for (unsigned int i = 1; i < lista.size(); i++){	
+   	if ( g.grados[max] < g.grados[lista[i]] ){
+  	  max = lista[i];
+    }				
   }
+  return max;
 }
 
 void goloso (Grafo g1, std::vector<int> &vertices1, 
          Grafo g2, std::vector<int> &vertices2) {
 
   Isomorfismo iso;
+  int max1 = nodo_max_grado(vertices1, g1);
+  int max2 = nodo_max_grado(vertices2, g2);
 
-  iso.push_back(std::make_pair(vertices1[0],vertices2[0]));
+  iso.push_back(std::make_pair(max1, max2));
 
-  vertices1 = copiar_sin(vertices1,vertices1[0]);
-  vertices2 = copiar_sin(vertices2,vertices2[0]);
+  vertices1 = copiar_sin(vertices1, max1);
+  vertices2 = copiar_sin(vertices2, max2);
 
   while ( vertices1.size() != 0 && vertices2.size() != 0){
   	std::pair<int, int> par_mayor_deg;
@@ -100,9 +100,6 @@ int main() {
   for (int i = 0; i < g2.n; i++) {
     vertices2.push_back(i);
   }
-
-  sort_adj(vertices1, g1);
-  sort_adj(vertices2, g2);
 
   solucion.aristas = 0;
   bool inverso;
