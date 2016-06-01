@@ -28,8 +28,8 @@ void goloso (Grafo g1, std::vector<int> &vertices1,
   vertices1 = copiar_sin(vertices1, max1);
   vertices2 = copiar_sin(vertices2, max2);
 
-  while ( vertices1.size() != 0 && vertices2.size() != 0){
-  	std::pair<int, int> par_mayor_deg;
+  while ( vertices1.size() != 0){
+    std::pair<int, int> par_mayor_deg = std::make_pair(vertices1[0], vertices2[0]);
   	for (const int u : vertices1) {
       for (const int v : vertices2) {
         Isomorfismo nuevo_iso = iso;
@@ -44,7 +44,6 @@ void goloso (Grafo g1, std::vector<int> &vertices1,
   	iso.push_back(par_mayor_deg);
   	vertices1 = copiar_sin(vertices1,par_mayor_deg.first);
   	vertices2 = copiar_sin(vertices2,par_mayor_deg.second);
-
   }
 
   solucion.isomorfismo = iso;
@@ -113,6 +112,7 @@ int main() {
 
   std::vector<std::pair<int, int>> aristas = 
     generar_isomorfismo(g1, g2, solucion.isomorfismo);
+    cout << "llegue" << endl;
 
   std::cout << solucion.isomorfismo.size() << " " << aristas.size() << std::endl;
   for (const auto p : solucion.isomorfismo) {
