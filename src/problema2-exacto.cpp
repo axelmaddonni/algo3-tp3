@@ -3,6 +3,7 @@
 #include <utility> 
 #include "utilidades.h"
 
+
 inline bool ordenado_asc(const Isomorfismo& iso) {
   if (iso.size() < 2) {
     return true;
@@ -52,8 +53,8 @@ std::vector<std::pair<int, int>> generar_isomorfismo(
       auto p = iso[i];
     for (unsigned int j = i + 1; j < iso.size(); j++) {
       auto q = iso[j];
-      if (lin_search(g1.adj_list[p.first], q.first) && 
-          lin_search(g2.adj_list[p.second], q.second)) {
+      if (g1.adj_matrix[p.first][q.first] && 
+          g2.adj_matrix[p.second][q.second]) {
         aristas.push_back(std::make_pair(i, j));
       }
     }
@@ -66,19 +67,25 @@ int main() {
   Grafo g1, g2;
 
   std::cin >> g1.n >> g1.m >> g2.n >> g2.m;
-  g1.adj_list.resize(g1.n);
-  g2.adj_list.resize(g2.n);
+  g1.adj_matrix = vector<vector<bool>>(g1.n, vector<bool>(g1.n, false));
+  g2.adj_matrix = vector<vector<bool>>(g2.n, vector<bool>(g2.n, false));
+  g1.grados = vector<int>(g1.n, 0);
+  g2.grados = vector<int>(g2.n, 0);
   for (int i = 0; i < g1.m; i++) {
     int u, v;
     std::cin >> u >> v;
-    g1.adj_list[u].push_back(v);
-    g1.adj_list[v].push_back(u);
+    g1.adj_matrix[u][v] = true;
+    g1.adj_matrix[v][u] = true;
+    g1.grados[u]++;
+    g1.grados[v]++;
   }
   for (int i = 0; i < g2.m; i++) {
     int u, v;
     std::cin >> u >> v;
-    g2.adj_list[u].push_back(v);
-    g2.adj_list[v].push_back(u);
+    g2.adj_matrix[u][v] = true;
+    g2.adj_matrix[v][u] = true;
+    g2.grados[u]++;
+    g2.grados[v]++;
   }
 
   std::vector<int> vertices1, vertices2;

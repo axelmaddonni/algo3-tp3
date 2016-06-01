@@ -1,10 +1,13 @@
 #include <vector>
 #include <utility>  // pair 
 
+using namespace std;
+
 struct Grafo {
   int n;
   int m;
-  std::vector<std::vector<int>> adj_list;
+  std::vector<std::vector<bool>> adj_matrix;
+  std::vector<int> grados;
 };
 
 typedef std::vector<std::pair<int, int>> Isomorfismo;
@@ -43,8 +46,8 @@ int contar_aristas_isomorfismo(Grafo g1, Grafo g2, Isomorfismo iso) {
       int ug1 = q.first;
       int ug2 = q.second;
 
-      if (lin_search(g1.adj_list[vg1], ug1) && // ug1 y vg1 estan conectados.
-          lin_search(g2.adj_list[vg2], ug2)) { // ug2 y vg2 estan conectados.
+      if (g1.adj_matrix[vg1][ug1] && // ug1 y vg1 estan conectados.
+          g2.adj_matrix[vg2][ug2]) { // ug2 y vg2 estan conectados.
         aristas++;
       }
     }
