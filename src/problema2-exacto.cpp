@@ -3,6 +3,7 @@
 #include <utility> 
 #include "utilidades.h"
 
+MCS solucion;
 
 inline bool ordenado_asc(const Isomorfismo& iso) {
   if (iso.size() < 2) {
@@ -71,6 +72,7 @@ int main() {
   g2.adj_matrix = vector<vector<bool>>(g2.n, vector<bool>(g2.n, false));
   g1.grados = vector<int>(g1.n, 0);
   g2.grados = vector<int>(g2.n, 0);
+
   for (int i = 0; i < g1.m; i++) {
     int u, v;
     std::cin >> u >> v;
@@ -79,6 +81,7 @@ int main() {
     g1.grados[u]++;
     g1.grados[v]++;
   }
+
   for (int i = 0; i < g2.m; i++) {
     int u, v;
     std::cin >> u >> v;
@@ -97,22 +100,26 @@ int main() {
   }
 
   solucion.aristas = 0;
+  bool inverso;
   if (g1.n < g2.n) {
     bt(g1, vertices1, g2, vertices2, Isomorfismo());
+    inverso = false;
   } else {
     bt(g2, vertices2, g1, vertices1, Isomorfismo());
+    inverso = true;
   }
-
   std::vector<std::pair<int, int>> aristas = 
     generar_isomorfismo(g1, g2, solucion.isomorfismo);
 
   std::cout << solucion.isomorfismo.size() << " " << aristas.size() << std::endl;
   for (const auto p : solucion.isomorfismo) {
-    std::cout << p.first << " ";
+    if(!inverso) std::cout << p.first << " ";
+    else std::cout << p.second << " ";
   }
   std::cout << std::endl;
   for (const auto p : solucion.isomorfismo) {
-    std::cout << p.second << " ";
+    if(!inverso) std::cout << p.second << " ";
+    else std::cout << p.first << " ";
   }
   std::cout << std::endl;
   for (const auto p : aristas) {

@@ -1,5 +1,6 @@
 #include <vector>
-#include <utility>  // pair 
+#include <utility>  // pair
+#include <algorithm>  // std::swap 
 
 using namespace std;
 
@@ -12,10 +13,10 @@ struct Grafo {
 
 typedef std::vector<std::pair<int, int>> Isomorfismo;
 
-struct {
+struct MCS{
   Isomorfismo isomorfismo;
   int aristas;
-} solucion;
+};
 
 std::vector<int> copiar_sin(std::vector<int> v, int x) {
   std::vector<int> v_copia;
