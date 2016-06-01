@@ -16,27 +16,37 @@ void sort_adj(std::vector<int> &lista, Grafo g){
   }
 }
 
-void bt (Grafo g1, std::vector<int> vertices1, 
-         Grafo g2, std::vector<int> vertices2,
-         Isomorfismo iso, int n_iteracion) {
-  int aristas = contar_aristas_isomorfismo(g1, g2, iso);
-  int parada = 6; 
-  if (aristas == -1 || n_iteracion > parada) {
-    return;
-  } else if (aristas > solucion.aristas) {
-    solucion.isomorfismo = iso;
-    solucion.aristas = aristas;
+void goloso (Grafo g1, std::vector<int> vertices1, 
+         Grafo g2, std::vector<int> vertices2) {
+
+  Isomorfismo iso;
+
+  iso.push_back(std::make_pair(vertices1[0],vertices2[0]));
+
+  vertices1 = copiar_sin(vertices1,vertices1[0]);
+  vertices2 = copiar_sin(vertices2,vertices2[0]);
+
+
+  while ( vertices1.size() != 0 && vertices2.size() != 0){
+	std::pair<int, int> par_mayor_deg;
+	for (const int u : vertices1) {
+	    for (const int v : vertices2) {
+	      Isomorfismo nuevo_iso = iso;
+	      nuevo_iso.push_back(std::make_pair(u, v));
+	      int aristas = contar_aristas_isomorfismo(g1, g2, nuevo_iso);
+	      if ( aristas > solucion.aristas){
+			solucion.aristas = aristas;
+			par_mayor_deg = std::make_pair(u,v);
+	      }
+	    }
+	}
+	iso.push_back(par_mayor_deg);
+	vertices1 = copiar_sin(vertices1,par_mayor_deg.first);
+	vertices2 = copiar_sin(vertices2,par_mayor_deg.second);
+
   }
-  for (const int u : vertices1) {
-    for (const int v : vertices2) {
-      n_iteracion++;
-      Isomorfismo nuevo_iso = iso;
-      nuevo_iso.push_back(std::make_pair(u, v));
-      bt(g1, copiar_sin(vertices1, u),
-         g2, copiar_sin(vertices2, v),
-         nuevo_iso, n_iteracion);
-    }
-  }
+
+  solucion.isomorfismo = iso;
 }
 
 std::vector<std::pair<int, int>> generar_isomorfismo(
@@ -94,9 +104,9 @@ int main() {
 
   solucion.aristas = 0;
   if (g1.n < g2.n) {
-    bt(g1, vertices1, g2, vertices2, Isomorfismo(), 0);
+    goloso(g1, vertices1, g2, vertices2);
   } else {
-    bt(g2, vertices2, g1, vertices1, Isomorfismo(), 0);
+    goloso(g2, vertices2, g1, vertices1);
   }
 
   std::vector<std::pair<int, int>> aristas = 
