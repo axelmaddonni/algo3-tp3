@@ -20,11 +20,11 @@ inline bool ordenado_asc(const Isomorfismo& iso) {
   return true;
 }
 
-std::vector<std::pair<int, int>> generar_isomorfismo(
+std::vector<std::pair<int, int>> hallar_aristas_isomorfismo(
     Grafo g1, Grafo g2, Isomorfismo iso) {
   std::vector<std::pair<int, int>> aristas;
   for (unsigned int i = 0; i < iso.size(); i++) {
-      auto p = iso[i];
+    auto p = iso[i];
     for (unsigned int j = i + 1; j < iso.size(); j++) {
       auto q = iso[j];
       if (g1.adj_matrix[p.first][q.first] && 
@@ -40,12 +40,12 @@ std::vector<std::pair<int, int>> generar_isomorfismo(
 void imprimir_solucion(bool inverso, std::vector<std::pair<int, int>> aristas) { 
   std::cout << solucion.isomorfismo.size() << " " << aristas.size() << std::endl;
   for (const auto p : solucion.isomorfismo) {
-    if(!inverso) std::cout << p.first << " ";
+    if(inverso) std::cout << p.first << " ";
     else std::cout << p.second << " ";
   }
   std::cout << std::endl;
   for (const auto p : solucion.isomorfismo) {
-    if(!inverso) std::cout << p.second << " ";
+    if(inverso) std::cout << p.second << " ";
     else std::cout << p.first << " ";
   }
   std::cout << std::endl;
@@ -75,6 +75,7 @@ void bt (Grafo g1, std::vector<int> vertices1,
     if (aristas > solucion.aristas) {
       solucion.isomorfismo = iso;
       solucion.aristas = aristas;
+
       /*
       std::cerr << "Actualizando solucion." << std::endl;
       std::cerr << "\tIso: {";
@@ -82,9 +83,8 @@ void bt (Grafo g1, std::vector<int> vertices1,
         std::cerr << "(" << iso[i].first << ", " << iso[i].second << ") ";
       }
       std::cerr << "} [aristas = "  << aristas << "]" << std::endl;
-
       std::vector<std::pair<int, int>> e_ = 
-        generar_isomorfismo(g1, g2, solucion.isomorfismo);
+        hallar_aristas_isomorfismo(g1, g2, solucion.isomorfismo);
       imprimir_solucion(false, e_);
       */
     }
@@ -139,17 +139,19 @@ int main() {
   }
 
   solucion.aristas = 0;
-  bool inverso;
   if (g1.n < g2.n) {
     bt(g1, vertices1, g2, vertices2, Isomorfismo());
-    inverso = false;
+
+    imprimir_solucion(
+        false, // inverso
+        hallar_aristas_isomorfismo(g1, g2, solucion.isomorfismo));
   } else {
     bt(g2, vertices2, g1, vertices1, Isomorfismo());
-    inverso = true;
+    imprimir_solucion(
+        true, // inverso
+        hallar_aristas_isomorfismo(g2, g1, solucion.isomorfismo));
   }
-  std::vector<std::pair<int, int>> aristas = 
-    generar_isomorfismo(g1, g2, solucion.isomorfismo);
-  imprimir_solucion(inverso, aristas);
+
 }
 
 
