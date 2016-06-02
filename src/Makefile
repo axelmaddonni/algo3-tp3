@@ -1,22 +1,18 @@
 CC = g++
 CFLAGS = -O2 -Wall -Wextra --std=c++11
+TARGETS = localSearch.o greedy.o utilidades.o
 
 all: problema2 heuristicas
 
-problema2: problema2-exacto.cpp
-	$(CC) $(CFLAGS) $< -o $@
+%.o: %.c
+	$(CC) $(CFLAGS) -c -o $@ $<
 
-heuristicas: heuristicas.o localSearch.o greedy.o
-	$(CC) $^ -o $@
+problema2: $(TARGETS) problema2-exacto.cpp
+	$(CC) $(CFLAGS) $(TARGETS) -o $@ problema2-exacto.cpp
 
-heuristicas.o: heuristicas.cpp
-	$(CC) $(CFLAGS) -c heuristicas.cpp 
+heuristicas: $(TARGETS) heuristicas.cpp
+	$(CC) $(FLAGS) $(TARGETS) -o $@ heuristicas.cpp
 
-greedy.o: greedy.h greedy.cpp
-	$(CC) $(CFLAGS) -c greedy.cpp
-
-localSearch.o: localSearch.h localSearch.cpp
-	$(CC) $(CFLAGS) -c localSearch.cpp
 
 clean:
 	rm -rf problema2 heuristicas
