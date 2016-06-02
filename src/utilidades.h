@@ -1,3 +1,7 @@
+#ifndef UTILIDADES_H
+#define UTILIDADES_H
+
+#include <iostream>
 #include <vector>
 #include <utility>  // pair
 #include <algorithm>  // std::swap 
@@ -56,3 +60,4 @@ int contar_aristas_isomorfismo(Grafo g1, Grafo g2, Isomorfismo iso) {
 
   return aristas / 2; // conte todas 2 veces;
 }
+#endif
