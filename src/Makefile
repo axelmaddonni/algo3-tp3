@@ -4,14 +4,14 @@ TARGETS = localSearch.o greedy.o utilidades.o
 
 all: problema2 heuristicas
 
-%.o: %.c
+%.o: %.cpp
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 problema2: $(TARGETS) problema2-exacto.cpp
 	$(CC) $(CFLAGS) $(TARGETS) -o $@ problema2-exacto.cpp
 
 heuristicas: $(TARGETS) heuristicas.cpp
-	$(CC) $(FLAGS) $(TARGETS) -o $@ heuristicas.cpp
+	$(CC) $(CFLAGS) $(TARGETS) -o $@ heuristicas.cpp
 
 
 clean:
