@@ -1,4 +1,4 @@
-#include "greedy.h"
+#include "goloso.h"
 
 //Ordena los vertices de mayor a menor grado
 void sort_adj(std::vector<int> &lista, Grafo g){

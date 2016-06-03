@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -O2 -Wall -Wextra --std=c++11
-TARGETS = localSearch.o greedy.o utilidades.o
+TARGETS = localSearch.o goloso.o utilidades.o
 
 all: problema2 heuristicas
 

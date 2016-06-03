@@ -1,5 +1,5 @@
 #include "utilidades.h"
-#include "greedy.h"
+#include "goloso.h"
 #include "localSearch.h"
 
 int main(int argc, const char* argv[]) {

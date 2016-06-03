@@ -1,7 +1,7 @@
 #ifndef LOCALSEARCH_H
 #define LOCALSEARCH_H
 
-#include "greedy.h"
+#include "goloso.h"
 
 typedef int Neighborhood;
 
