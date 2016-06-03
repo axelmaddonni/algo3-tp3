@@ -7,7 +7,7 @@ MCS local_search(Grafo &g1, vector<int> &vertices1,
   if (nh == 0) {
     bool mejore = true;
     short iteracion = 0;
-    while(mejore && iteracion < 10) {
+    while(mejore && iteracion < 100) {
       mejore = false;
       for (unsigned int i = 0; i < source.isomorfismo.size(); i++) {
         for (unsigned int j = 0; j < source.isomorfismo.size(); j++) {
@@ -18,7 +18,9 @@ MCS local_search(Grafo &g1, vector<int> &vertices1,
             source.aristas = aristas;
             source.isomorfismo = iso_actual;
             mejore = true;
-          }                        
+          } else {
+            std::swap(iso_actual[i].first, iso_actual[j].first);
+          }                       
         }
       }
       iteracion++;
@@ -27,7 +29,7 @@ MCS local_search(Grafo &g1, vector<int> &vertices1,
   else if (nh == 1) {
     bool mejore = true;
     short iteracion = 0;
-    while(mejore && iteracion < 10) {
+    while(mejore && iteracion < 100) {
       mejore = false;
       for(unsigned int i = 0; i < vertices2.size(); i++) {
         for(unsigned int j = 0; j < source.isomorfismo.size(); j++) {
@@ -43,8 +45,8 @@ MCS local_search(Grafo &g1, vector<int> &vertices1,
           }
         }
       }
+      iteracion++;
     }
-    iteracion++;
   }
 
   return source;
