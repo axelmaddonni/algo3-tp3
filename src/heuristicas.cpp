@@ -5,6 +5,11 @@
 int main(int argc, const char* argv[]) {
   //argv[1] = tipo de heuristica: GOLOSO, LOCAL o TABU
   //argv[2] = si argv[1] == LOCAL, es el vecindario
+  if (argc < 2 ){
+    cout << "ERROR EN PARAMETROS. Modo de uso: " << std::endl;
+    cout << "./heuristicas <tipo>" << std::endl;
+    return 0;
+  }
   string heuristica = argv[1];
   Grafo g1, g2;
 
