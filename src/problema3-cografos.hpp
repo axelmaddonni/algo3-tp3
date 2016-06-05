@@ -229,7 +229,7 @@ CographTree::Solucion CographTree::mcs_Sol (int cantNodos, int tamGrafoCompleto)
 				Solucion solDer = der->mcs_Sol(cantNodos-i, tamGrafoCompleto);
 				int aristas = solIzq.first + solDer.first;
 				if (tipo == join) { aristas += solIzq.second.size() * solDer.second.size(); }
-				if (aristas > maxAristas) {
+				if (aristas >= maxAristas && (solIzq.second.size() + solDer.second.size() == (unsigned int)cantNodos) ) {
 					maxAristas = aristas;
 					nodosSolIzq = solIzq.second;
 					nodosSolDer = solDer.second;
