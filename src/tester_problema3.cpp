@@ -47,6 +47,7 @@ int testearCorrectitudMCS(const CographTree& cografo, int tamGrafoCompleto, cons
 	if (solucion.aristas == mcs.m) {
 		return 1;
 	} else {
+		cout << "La sol era: " << solucion.aristas << endl;
 		return 0;
 	}
 }
@@ -60,7 +61,8 @@ int main(int argc, char const *argv[]) {
 		opt = argv[1];
 	}
 
-	if ( opt.compare("random") != 0 && opt.compare("nrandom") != 0 ){
+	if ( argc < 2 || (opt.compare("correctitud") == 0) ){
+		
 		Grafo_adjlist g;
 		int tamGrafoCompleto;
 		int aristasGrafoCompleto;
@@ -81,12 +83,16 @@ int main(int argc, char const *argv[]) {
 		CographTree cografo(g); 
 		Grafo_adjlist mcs = subgrafoInducido(g, cografo.nodosMCS(tamGrafoCompleto));
 	
-		int s = testearCorrectitudMCS(cografo, tamGrafoCompleto, mcs);
+		if (opt.compare("correctitud") == 0){
+			int s = testearCorrectitudMCS(cografo, tamGrafoCompleto, mcs);
 
-		if (s == 1) {
-			cout << "Solucion correcta!" << endl;
+			if (s == 1) {
+				cout << "Solucion correcta!" << endl;
+			} else {
+				cout << "Solucion INCORRECTA para grafo de entrada." << endl;
+			}
 		} else {
-			cout << "Solucion INCORRECTA para grafo de entrada." << endl;
+			imprimirSolucion(mcs);
 		}
 
 	} else if ( opt.compare("random") == 0  && argc == 4){
@@ -103,24 +109,27 @@ int main(int argc, char const *argv[]) {
 		if (s == 1) {
 			cout << "Solucion correcta!" << endl;
 		} else {
-			cout << "Solucion INCORRECTA para grafo de entrada." << endl;
+			cout << "Solucion INCORRECTA para grafo de n = " << n << " y tamGrafoCompleto = " << tamGrafoCompleto << endl;
+			cout << "Grafo de prueba que fallo: " << endl;
+			imprimirGrafo(cografo.representacionGrafo());
 		}
 
-	} else if ( opt.compare("nrandom") == 0  && argc == 4){
+	} else if ( opt.compare("nrandom") == 0  && argc == 5){
 
 		int cantCografos = atoi(argv[2]);
-		int cantGrafosCompletos = atoi(argv[3]);
+		int tamCografo = atoi(argv[3]);
+		int cantGrafosCompletos = atoi(argv[4]);
 		int solcorrectas = 0;
 		int solincorrectas = 0;
 
 		for (int n = 1; n <= cantCografos; n++){
 
-			CographTree cografo(n, 1);
+			CographTree cografo(tamCografo, 1);
 
 			std::vector<int> tamanos;
 			for (int k = 1; k <= cantGrafosCompletos; k++){
 
-				int t = (rand() % n+1) + 1;
+				int t = (rand() % tamCografo+1) + 1;
 				tamanos.push_back(t);
 
 				for (int tamGrafoCompleto: tamanos){
@@ -130,10 +139,12 @@ int main(int argc, char const *argv[]) {
 					int s = testearCorrectitudMCS(cografo, tamGrafoCompleto, mcs);
 					if (s == 1){
 						solcorrectas++;
-						cout << "OK con n = " << n << " y t = " << t << endl;
+						cout << "Solucion correcta! con n = " << tamCografo << " y tamGrafoCompleto = " << t << endl;
 					} else {
 						solincorrectas++;
-						cout << "Sol INCORRECTA con n = " << n << " y t = " << t << endl;
+						cout << "Sol INCORRECTA con n = " << tamCografo << " y tamGrafoCompleto = " << t << endl;
+						cout << "Grafo de prueba que fallo: " << endl;
+						imprimirGrafo(cografo.representacionGrafo());
 					}
 				}
 			}
@@ -142,8 +153,8 @@ int main(int argc, char const *argv[]) {
 		cout << "Soluciones incorrectas: " << solincorrectas << endl;
 	} else {
 		cout << "ERROR EN LOS PARAMETROS. Modo de uso: " << endl;
-		cout << " ./testerproblema3 < test.in" << endl;
+		cout << " ./testerproblema3 (correctitud) < test.in" << endl;
 		cout << " ./testerproblema3 random <tamCografo> <tamGrafoCompleto>" << endl;
-		cout << " ./testerproblema3 nrandom <cantCografos> <cantGrafosCompletos>" << endl;
+		cout << " ./testerproblema3 nrandom <cantCografos> <tamCografo> <cantGrafosCompletos>" << endl;
 	}
 }

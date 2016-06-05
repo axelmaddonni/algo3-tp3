@@ -222,31 +222,51 @@ CographTree::Solucion CographTree::mcs_Sol (int cantNodos, int tamGrafoCompleto)
 
 		} else  { 	// tipo == join o union
 			int maxAristas = 0 ;
-			int cantNodosIzq = 0;
-			int cantNodosDer = 0;
+			vector<int> nodosSolIzq;
+			vector<int> nodosSolDer;
 			for (int i = 0; i <= cantNodos; i++) {
-				int aristas = izq->mcs_Sol(i, tamGrafoCompleto).first + der->mcs_Sol(cantNodos-i, tamGrafoCompleto).first;
-				if (tipo == join) { aristas += i * (cantNodos-i); }
+				Solucion solIzq = izq->mcs_Sol(i, tamGrafoCompleto);
+				Solucion solDer = der->mcs_Sol(cantNodos-i, tamGrafoCompleto);
+				int aristas = solIzq.first + solDer.first;
+				if (tipo == join) { aristas += solIzq.second.size() * solDer.second.size(); }
 				if (aristas > maxAristas) {
 					maxAristas = aristas;
-					cantNodosIzq = i;
-					cantNodosDer = cantNodos - i;
+					nodosSolIzq = solIzq.second;
+					nodosSolDer = solDer.second;
 				}
 			}
 			cantAristasSol = maxAristas;
-			nodosSol = unirNodos(
-							(izq->mcs_Sol(cantNodosIzq, tamGrafoCompleto)).second,
-							(der->mcs_Sol(cantNodosDer, tamGrafoCompleto)).second
-							);
+			if (cantAristasSol == 0){
+				for (int i = 0; i < cantNodos; ++i) {
+					nodosSol.push_back(nodos[i]);
+				}
+			} else {
+				nodosSol = unirNodos(nodosSolIzq, nodosSolDer);
+			}
 
 		} 
 		Solucion s (cantAristasSol, nodosSol);
 		(sol[cantNodos]).first = true;
 		(sol[cantNodos]).second = s;
+		
+		// FOR DEBUGGING
+		// cout << "nodos: ";
+		// for (int n: nodos){
+		// 	cout << n << " ";
+		// }
+		// cout << "cantNodos: " << cantNodos << " tamGrafoCompleto: " << tamGrafoCompleto;
+		// cout << std::endl;
+		// cout << "sol: " << cantAristasSol << std::endl;
+		// cout << "nodosSol: " ;
+		// for (int n:nodosSol){
+		// 	cout << n << " ";
+		// }
+		// cout << std::endl;
+
 		return s;
+
 	}
 }
-
 
 // Funciones generales para grafos
 
