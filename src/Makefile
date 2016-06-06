@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -O2 -Wall -Wextra --std=c++11 -g
+CFLAGS = -O2 -Wall -Wextra --std=c++11 -g -DTOMAR_TIEMPO
 TARGETS = localSearch.o goloso.o utilidades.o
 
 all: problema2 testerproblema3 heuristicas 

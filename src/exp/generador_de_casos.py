@@ -13,8 +13,6 @@ import copy
 import math
 
 def grafo_random(n, m):
-    if not (n - 1 <= m <= n * (n - 1) / 2):
-        return None
     graph = set()
     while len(graph) < m:
         graph.add((random.randint(0,n-1), random.randint(0,n-1)))
