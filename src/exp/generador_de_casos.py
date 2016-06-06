@@ -31,36 +31,27 @@ def generar_string(grafo1, n1, grafo2, n2):
 
 
 def main():
-    size = 50
-    q = [500, 400, 200, 100, 50, 10]
-    for i in range(6):
+    size = 0
+    q = [500, 500, 400, 400, 300, 300, 200, 200, 100, 100]
+    for i in range(10):
         random.seed(i)
-        size *= 2
+        size += 50
         for j in range(q[i]):
-            print i, j
+            print size, j
+            n1 = size
+            m1 = random.randint(1, n1 * (n1 - 1) / 2)
+            n2 = random.randint(n1 / 25, n1)
+            m2 = random.randint(1, n2 * (n2 - 1) / 2)
             s = generar_string(
-                    grafo_random(
-                        size,
-                        random.randint(size - 1, size * (size - 1) / 2)),
-                    size,
-                    grafo_random(
-                        size,
-                        random.randint(size - 1, size * (size - 1) / 2)),
-                    size)
+                    grafo_random(n1, m1), n1, grafo_random(n2, m2), n2)
             s2 = generar_string(
-                    grafo_random(
-                        size,
-                        random.randint(size - 1, size * (size - 1) / 2)),
-                    size,
-                    grafo_random(
-                        size,
-                        random.randint(size - 1, size * (size - 1) / 2)),
-                    size)
+                    grafo_random(n1, m1), n1, grafo_random(n2, m2), n2)
             nombre_archivo = "caso" + str(size) + "_" + str(j) + ".txt"
             text_file = open("casos_random/casos_ahora/" + nombre_archivo, "w")
             text_file.write(s)
             text_file.close()
-            text_file2 = open("casos_random/casos_despues/" + nombre_archivo, "w")
+            text_file2 = open(
+                    "casos_random/casos_despues/" + nombre_archivo, "w")
             text_file2.write(s2)
             text_file2.close()
 
