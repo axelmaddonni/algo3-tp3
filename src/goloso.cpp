@@ -1,6 +1,6 @@
 #include "goloso.h"
 
-//Ordena los vertices de mayor a menor grado
+// Ordena los vertices de mayor a menor grado.
 void sort_adj(std::vector<int> &lista, Grafo g){
   for (unsigned int i = 1; i < lista.size(); i++){		
     int v = lista[i];
@@ -13,8 +13,9 @@ void sort_adj(std::vector<int> &lista, Grafo g){
   }
 }
 
-MCS goloso (Grafo g1, std::vector<int> &vertices1, 
-         Grafo g2, std::vector<int> &vertices2) {
+MCS goloso(
+    Grafo g1, std::vector<int> &vertices1,
+    Grafo g2, std::vector<int> &vertices2) {
 
   MCS solucion;
   solucion.aristas = 0;
@@ -41,8 +42,8 @@ MCS goloso (Grafo g1, std::vector<int> &vertices1,
       }
   	}
   	solucion.isomorfismo.push_back(par_mayor_deg);
-  	vertices1 = copiar_sin(vertices1,par_mayor_deg.first);
-  	vertices2 = copiar_sin(vertices2,par_mayor_deg.second);
+  	vertices1 = copiar_sin(vertices1, par_mayor_deg.first);
+  	vertices2 = copiar_sin(vertices2, par_mayor_deg.second);
   }
 
   return solucion;

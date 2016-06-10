@@ -1,11 +1,8 @@
-
-#include "utilidades.h"
 #include "goloso.h"
+#include "utilidades.h"
 
-int main(int argc, const char* argv[]) {
-  string heuristica = argv[1];
+int main() {
   Grafo g1, g2;
-
   leer_entrada(g1, g2);
 
   std::vector<int> vertices1, vertices2;
