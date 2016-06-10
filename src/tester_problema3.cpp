@@ -1,8 +1,10 @@
+#include "problema3-cografos.h"
+
 #include <assert.h>
 #include <iostream>
 #include <string>
-#include "problema3-cografos.hpp"
-#include "problema2-exacto.hpp"
+
+#include "problema2-exacto.h"
 
 using std::string;
 

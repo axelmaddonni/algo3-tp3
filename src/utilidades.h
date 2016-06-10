@@ -1,10 +1,10 @@
 #ifndef UTILIDADES_H
 #define UTILIDADES_H
 
-#include <iostream>
-#include <vector>
-#include <utility>  // pair
 #include <algorithm>  // std::swap
+#include <iostream>
+#include <utility>  // pair
+#include <vector>
 
 using namespace std;
 
@@ -22,7 +22,6 @@ struct MCS{
   int aristas;
 };
 
-
 std::vector<int> copiar_sin(std::vector<int> v, int x);
 
 int contar_aristas_isomorfismo(Grafo g1, Grafo g2, Isomorfismo iso);
@@ -30,6 +29,9 @@ int contar_aristas_isomorfismo(Grafo g1, Grafo g2, Isomorfismo iso);
 std::vector<std::pair<int, int>> hallar_aristas_isomorfismo(
     Grafo g1, Grafo g2, Isomorfismo iso);
 
-void imprimir_solucionH(bool inverso, std::vector<std::pair<int, int>> aristas, MCS solucion);
+void imprimir_solucionH(bool inverso,
+    std::vector<std::pair<int, int>> aristas, MCS solucion);
+
+void leer_entrada(Grafo& g1, Grafo& g2);
 
 #endif

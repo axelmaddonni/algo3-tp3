@@ -1,4 +1,4 @@
-#include "localSearch.h"
+#include "local-search.h"
 
 MCS local_search(Grafo &g1, vector<int> &vertices1,
                  Grafo &g2, vector<int> &vertices2,

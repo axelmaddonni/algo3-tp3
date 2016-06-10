@@ -61,3 +61,28 @@ void imprimir_solucionH(bool inverso, std::vector<std::pair<int, int>> aristas, 
     std::cout << p.first << " " << p.second << std::endl;
   }
 }
+
+void leer_entrada(Grafo& g1, Grafo& g2) {
+  std::cin >> g1.n >> g1.m >> g2.n >> g2.m;
+
+  g1.adj_matrix = vector<vector<bool>>(g1.n, vector<bool>(g1.n, false));
+  g2.adj_matrix = vector<vector<bool>>(g2.n, vector<bool>(g2.n, false));
+  g1.grados = vector<int>(g1.n, 0);
+  g2.grados = vector<int>(g2.n, 0);
+  for (int i = 0; i < g1.m; i++) {
+    int u, v;
+    std::cin >> u >> v;
+    g1.adj_matrix[u][v] = true;
+    g1.adj_matrix[v][u] = true;
+    g1.grados[u]++;
+    g1.grados[v]++;
+  }
+  for (int i = 0; i < g2.m; i++) {
+    int u, v;
+    std::cin >> u >> v;
+    g2.adj_matrix[u][v] = true;
+    g2.adj_matrix[v][u] = true;
+    g2.grados[u]++;
+    g2.grados[v]++;
+  }
+}

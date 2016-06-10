@@ -1,7 +1,7 @@
 #include <iostream>
-#include <vector>
-#include <vector>
 #include <utility> 
+#include <vector>
+
 #include "utilidades.h"
 
 #define MIN(a,b) ((a)<(b)?(a):(b))
@@ -84,7 +84,5 @@ void bt (Grafo g1, std::vector<int> vertices1,
     }
   }
 }
-
-
 
 
