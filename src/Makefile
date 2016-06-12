@@ -19,6 +19,9 @@ problema4: $(TARGETS) problema4-goloso.cpp
 problema5: $(TARGETS) problema5-heuristicas.cpp
 	$(CC) $(CFLAGS) $(TARGETS) -o $@ problema5-heuristicas.cpp
 
+problema6: $(TARGETS) problema6-tabusearch.cpp
+	$(CC) $(CFLAGS) $(TARGETS) -o $@ problema6-tabusearch.cpp
+
 clean:
-	rm -rf problema2 testerproblema3 problema4 problema5
+	rm -rf problema2 testerproblema3 problema4 problema5 problema6
 	rm -rf *.o
