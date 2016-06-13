@@ -55,8 +55,6 @@ MCS goloso(
         *(vertices2.begin()));
   	for (const int u : vertices1) {
       for (const int v : vertices2) {
-        Isomorfismo nuevo_iso = solucion.isomorfismo;
-        nuevo_iso.push_back(make_pair(u, v));
         int aristas = contar_aristas_isomorfismo_agregar(g1, g2, u, v,
             solucion.isomorfismo);
         if ( aristas > solucion.aristas){
