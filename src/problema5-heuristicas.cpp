@@ -15,7 +15,7 @@ int main(int argc, const char* argv[]) {
   }
   
   // TODO: Ver como cambiar esto.
-  Neighborhood nh = 0;
+  Neighborhood nh = atoi(argv[1]);
   MCS solucion;
   if (g1.n < g2.n) {
     solucion = local_search(g1, vertices1, g2, vertices2, nh);
