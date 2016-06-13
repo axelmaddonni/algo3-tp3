@@ -86,3 +86,7 @@ void leer_entrada(Grafo& g1, Grafo& g2) {
     g2.grados[v]++;
   }
 }
+
+std::set<int> vector_to_set(std::vector<int> v) {
+  return std::set<int>(v.begin(), v.end());
+}

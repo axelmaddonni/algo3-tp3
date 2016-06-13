@@ -4,7 +4,7 @@ MCS local_search(Grafo &g1, vector<int> &vertices1,
                  Grafo &g2, vector<int> &vertices2,
                  Neighborhood nh) {
 
-  MCS source = goloso(g1, vertices1, g2, vertices2);
+  MCS source = goloso(g1, vector_to_set(vertices1), g2, vector_to_set(vertices2));
   
   //Estrategia que consiste en probar distintas permutaciones de
   //los vértices de g1 en el mapeo. Las permutaciones se arman

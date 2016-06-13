@@ -6,12 +6,12 @@ int main(int argc, const char* argv[]) {
   Grafo g1, g2;
   leer_entrada(g1, g2);
 
-  std::vector<int> vertices1, vertices2;
+  std::set<int> vertices1, vertices2;
   for (int i = 0; i < g1.n; i++) {
-    vertices1.push_back(i);
+    vertices1.insert(i);
   }
   for (int i = 0; i < g2.n; i++) {
-    vertices2.push_back(i);
+    vertices2.insert(i);
   }
   
   // TODO: Ver como cambiar esto.

@@ -2,11 +2,12 @@
 #define GREEDY_H
 
 #include "utilidades.h"
+#include <set>
 
-void sort_adj(std::vector<int> &lista, Grafo g);
+int mayor_adj(std::set<int>& lista, Grafo g);
 
 MCS goloso(
-    Grafo g1, std::vector<int> &vertices1,
-    Grafo g2, std::vector<int> &vertices2);
+    Grafo g1, std::set<int> vertices1,
+    Grafo g2, std::set<int> vertices2);
 
 #endif
