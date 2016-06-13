@@ -1,10 +1,10 @@
 #include "local-search.h"
 
-MCS local_search(Grafo &g1, vector<int> &vertices1,
-                 Grafo &g2, vector<int> &vertices2,
+MCS local_search(Grafo &g1, std::set<int> &vertices1,
+                 Grafo &g2, std::set<int> &vertices2,
                  Neighborhood nh) {
 
-  MCS source = goloso(g1, vector_to_set(vertices1), g2, vector_to_set(vertices2));
+  MCS source = goloso(g1, vertices1, g2, vertices2);
   
   //Estrategia que consiste en probar distintas permutaciones de
   //los vértices de g1 en el mapeo. Las permutaciones se arman
@@ -40,7 +40,7 @@ MCS local_search(Grafo &g1, vector<int> &vertices1,
   //los vértices de g1.
   //Notar que si #vertices1 = #vertices2 el algoritmo termina en O(1)
   //Caso bueno: 3
-  else if (nh == 1) {
+/*  else if (nh == 1) {
     bool mejore = true;
     short iteracion = 0;
     while(mejore) {
@@ -63,7 +63,7 @@ MCS local_search(Grafo &g1, vector<int> &vertices1,
       }
       iteracion++;
     }
-  }
+  }*/
 
   else if (nh == 2) {
     bool mejore = true;
