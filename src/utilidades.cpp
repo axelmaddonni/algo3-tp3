@@ -87,6 +87,6 @@ void leer_entrada(Grafo& g1, Grafo& g2) {
   }
 }
 
-std::set<int> vector_to_set(std::vector<int> v) {
-  return std::set<int>(v.begin(), v.end());
+std::vector<int> set_to_vector(std::set<int> s) {
+  return std::vector<int>(s.begin(), s.end());
 }

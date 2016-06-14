@@ -35,6 +35,6 @@ void imprimir_solucionH(bool inverso,
 
 void leer_entrada(Grafo& g1, Grafo& g2);
 
-std::set<int> vector_to_set(std::vector<int> v);
+std::vector<int> set_to_vector(std::set<int> v);
 
 #endif
