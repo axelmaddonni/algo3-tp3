@@ -1,0 +1,165 @@
+\subsection{Explicación detallada del algoritmo}
+
+El problema del sugrafo común máximo (con respecto a aristas) es un problema perteneciente a la clase NP, por lo que hasta el momento no se conocen algoritmos que lo resuelvan de manera exacta en tiempo polimonial. 
+
+Por esa razón, el algoritmo que lo resuelve de manera exacta debe ser de la clase de algoritmos que exploran todo el espacio de soluciones y se quedan con la mejor. De entre esos algoritmos, elegiremos un algoritmo de backtracking, dado que proponiendo buenas podas, se pueden mejorar los tiempos de ejecución del algoritmo, evitando mirar el espacio de soluciones en su enteridad.
+
+Nuestras soluciones, es decir, nuestos isomorfismos, van a estar representados como un vector de pares. Cada par $(v_{1i}, v_{2i})$ es un par de vértices que cumplen que $v_{1i} \in V(G_1)$ y $v_{2i} \in V(G_2)$ y nuestro isomorfismo los mapea. 
+
+Por ejemplo, si nuestro isomorfismo es $f : V(G_1) \to V(G_2)$ tal que
+
+$
+\begin{matrix}
+f(0) = f(1) \\
+f(1) = f(2) \\
+f(3) = f(5) \\
+f(6) = f(0) \\
+\end{matrix}
+$
+
+Lo vamos a almacenar de la siguiente manera: ${(0,1), (1,2), (3,5), (6,0)}$. Nótese que no importa que el ``isomorfismo'' sea parcial, dado que en realidad estamos describiendo subrafos isomorfos.
+
+Por lo tanto, nuestro algoritmo de backtracking se va a basar en probar todas las posibles combinaciones de listas de pares, y buscar cual representa el isomorfismo con la mayor cantidad de aristas. 
+
+Una primera poda que proponemos (bastante fácil de explicar y muy poderosa) es la que sigue: podemos notar que si ciegamente consideramos todas las combinaciones de pares, estaremos considerando todos los isomorfismos varias veces.
+Por ejemplo, el vector ${(0,1), (1,2)}$ y el vector ${(1,2), (0,1)}$ representan el mismo isomorfismo, pero nuestro algoritmo naif los analizará 2 veces.
+
+Por esta razón, diseñamos la siguiente poda: solo considerar vectores cuyo vector de primera coordenadas esté ordenado ascendentemente. En el ejemplo anterior, cuando le llegue al turno a ${(1,2), (0,1)}$, no lo analizaremos ni a él, ni a ninguno de sus descendientes, dado que todos ellos serán analizados como descendientes de ${(0,1), (1,2)}$.
+
+Otra poda que realizamos es que, si encontramos la solución máxima posible teóricamente (es decir, la solución cuya cantidad de aristas coincide con el mínimo de las aristas de $G_1$ y $G_2$), terminar con el algoritmo inmediatamente.
+
+Una última poda que realizamos es considerar solamente aquellos vectores cuyo largo sea exactamente el del mínimo de los vértices de $G_1$ y $G_2$. Esto se debe a que, si un vector es más chico, vamos a poder considerar a un vector extendido, cuyo isomorfismo potencialmente tendrá más aristas.
+
+El algoritmo utiliza una variable global llamada $solución$, que tiene 2 campos, $aristas$ e $isomorfismo$. En esta variable global irá guardando la mejor solución encontrada hasta el momendo. $solución.aristas$ debe inicializarse en 0.
+
+Sin más que analizar, pasemos a ver el pseudocódigo del algoritmo. Vale la pena aclarar que asumimos como preconodición que $G_1$ tiene menos nodos que $G_2$ (en tal caso de que asi no fuere, el llamador debe ocuparse de dar vuelta los parámetros).
+
+
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+  \caption{Pseudocódigo del procedimiento BackTracking}
+  \label{algo:2-1}
+    \Procedure{bt}{\texttt{Grafo} $g1$, \texttt{Grafo} $g2$, \texttt{vector<int>} $vertices1$, \texttt{vector<int>} $vertices2$, \texttt{Isomorfismo} $iso$}
+      \If {$solucion.aristas == MIN(g1.m, g2.m)$}
+        \Comment $O(1)$ 
+        \State \Return
+      \EndIf
+      \If {$! ordenado\_asc(iso)$}
+        \Comment $O(n_1)$ 
+        \State \Return
+      \EndIf
+      \If {$iso.size == g1.n$}
+        \Comment $O(1)$ 
+        \State $aristas \gets contar\_aristas\_isomorfismo(g1, g2, iso)$
+        \Comment $O(n_1^2)$ 
+        \If {$aristas > solucion.aristas$}
+          \Comment $O(1)$ 
+          \State $solucion.isomorfismo \gets iso$
+          \Comment $O(n_1)$ 
+          \State $solucion.aristas \gets aristas$
+          \Comment $O(1)$ 
+        \EndIf
+        \State \Return
+      \EndIf
+      
+      \For {$u \in vertices1$}
+        \Comment $v_1$ veces $O(1)$ 
+        \For {$v \in vertices2$}
+          \Comment $v_1 v_2$ veces $O(1)$ 
+          \State $nuevo\_iso = iso$
+          \Comment $v_1 v_2$ veces $O(n_1)$ 
+          \State $nuevo\_iso.push\_back(make\_pair(u,v))$
+          \Comment $v_1 v_2$ veces $O(1)$ 
+          \State $bt(g1, g2, copiar\_sin(vertices1, u), copiar\_sin(vertices2, v), nuevo\_iso)$
+          \Comment $v_1 v_2$ veces $T(n_1, n_2, v_1 - 1, v_2 - 1)$
+        \EndFor
+      \EndFor
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+
+
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+  \caption{Pseudocódigo del procedimiento contar aristas isomorfismo}
+  \label{algo:2-2}
+    \Procedure{contar\_aristas\_isomorfismo}{\texttt{Grafo} $g1$, \texttt{Grafo} $g2$, \texttt{Isomorfismo} $iso$} $\to$ \texttt{Int}
+      \State $aristas \gets 0$
+      \Comment $O(1)$
+      \For {$ p \in iso$}
+         \Comment $n_1$ veces $O(1)$ 
+         \State $vg1 = p.first$
+         \Comment $n_1$ veces $O(1)$ 
+         \State $vg2 = p.second$
+         \Comment $n_1$ veces $O(1)$ 
+         \For {$q \in iso$}
+           \Comment $n_1$ veces $O(1)$
+           \State $ug1 = q.first$
+           \Comment $n_1^2$ veces $O(1)$
+           \State $ug2 = q.second$
+           \Comment $n_1^2$ veces $O(1)$
+           \If {$g1.adj\_matrix[vg1][ug1] \land g2.adj\_matrix[vg2][ug2]$}
+           \Comment $n_1^2$ veces $O(1)$
+             \State $aristas++$
+             \Comment $n_1^2$ veces $O(1)$
+           \EndIf
+         \EndFor
+       \EndFor
+     \Return aristas
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+Donde $n_i = |V(G_i)|$ y $m_i = |E(G_i)|$, para $i = 1, 2$. Nótese que el largo del vector isomorfismo está acotado superiormente por $n_1$, pues $n_1 < n_2$ y el isomorfismo mapea a lo sumo a todos los vértices de $n_1$ y no puede mapear más cosas. 
+
+Además, $v_i$ para $i = 1,2$ es el tamaño del vector $verticesi$.
+
+
+El algoritmo debe ser llamado de la siguiente manera:
+
+\[bt(grafo1, \{1,...,|V(grafo1)|\}, grafo2, \{1,...,|V(grafo2)\}, \{ \})\].
+
+Dado que inicialmente tódos los vértices están sin ser utilizados, y el isomorfismo es el isomorfismo vacío.
+
+\subsubsection{Complejidad del algoritmo}
+
+Calculemos la complejidad del algoritmo. Primero, como vimos, la complejidad del algoritmo contar\_aristas\_isomorfismo es $O(n_1^2)$ y es bastante fácil de calcular.
+
+Ahora, calculemos la complejidad del algoritmo de backtracking. Sea $T(n_1, n_2, v_1, v_2)$ el tiempo que el algoritmo tarda para una entrada de ese tamaño. El tamaño del vector $iso$ puede acotarse por $n_1$, como vimos antes.
+
+Como se ve en en análisis de complejidad, $T(n_1, n_2, v_1, v_2) = n_1 + n_1^2 + v_1 v_2 n_1 + v_1 v_2 + v_1 v_2 T(n_1, n_2, v_1 - 1, v_2 - 1)$.
+
+Además, notemos que siempre pasa que $v_i < n_i$, luego, la complejidad puede acotarse por $T(n_1, n_2, v_1, v_2) < n_1 + n_1^2 + v_1 v_2 n_1 + v_1 v_2 + v_1 v_2 T(n_1, n_2, v_1 - 1, v_2 - 1)$.
+Nos tomamos la libertad de escribir $T(v_1, v_2)$, dado que son los únicos parámetros variables ($n_1$ y $n_2$ están fijos).
+
+
+Como $n_i > v_i$, $T(v_1, v_2) < n_1 + n_1^2 + n_1 n_2 n_1 + n_1 n_2 + v_1 v_2 T(v_1 -1, v_2 - 1)$. 
+
+Luego, $T(v_1, v_2) < 4 n_1^2 n_2 + v_1 v_2 T(v_1 -1, v_2 - 1)$.
+
+Además, $T(n_1, n_2, 0, v_2) = n_1 + n_1^2$ (recordemos que siempre va a pasar que $n_1 < n_2$, por lo tanto $v_1 < v_2$). Por lo que la profundidad de la fórmula recursiva depende solo de $v_1$. Luego,
+\[
+\begin{array}{ll}
+T(v_1, v_2) & < 4 n_1^2 n_2 + v_1 v_2 T(v_1 - 1, v_2 - 1) \\
+  & < 4 n_1^2 n_2 + v_1 v_2 (4 n_1^2 n_2 + (v_1-1)(v_2-1) T(v_1-2,v_2-2)) \\
+  & = 4 n_1^2 n_2 + v_1 v_2 4 n_1^2 n_2 + v_1 v_2 (v_1-1)(v_2-1)T(v_1-2,v_2-2) \\
+  & < 4 n_1^2 n_2 + 4 n_1^3 n_2^2 + v_1 v_2 (v_1-1)(v_2-1)T(v_1-2,v_2-2) \\
+  & < ... \\ 
+  & < 4 n_1^2 n_2 + ... + 4 n_1^{v_1} n_2^{v_1 - 1} + v_1 (v_1 - 1) ... (v_1 - v_1 + 1)  v_2 (v_2 - 1) ... (v_2 - v_1 + 1) T(0, v_2 - v_1) \\ 
+  & < 4 n_1^2 n_2 + 4 n_1^3 n_2^2 + ... + 4 n_1^{v_1} n_2^{v_1 - 1} + 4 n_1^{v_1 + 1} n_2^{v_1}  \\
+  & < 4 n_1^2 n_2 + 4 n_1^3 n_2^2 + ... + 4 n_1^{v_1+1} n_2^{v_1} \\
+  & < 4^{v_1 + 1} n_1^{v_1+1} n_2^{v_1 + 1} \\ 
+  & = (4 n_1 n_2)^{v_1 + 1} \\
+\end{array}
+\]
+
+Luego, $T(n1, n2) \in O((4 n_1 n_2)^{n_1 + 1})$.
+
+Nótese que esta es una cota bastante poco ajustada, pero es suficientemente exacta para el análisis que queremos hacer (una cota más ajustada, como se ve en los cálculos anteriores, involucra fórmulas con factoriales y combinatorios).
+
+
+
+\subsection{Performance del algoritmo}
+
+\input{ejer2_exp.tex}
