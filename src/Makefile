@@ -2,7 +2,7 @@ CC = g++
 CFLAGS = -O2 -Wall -Wextra --std=c++11 -g
 TARGETS = local-search.o goloso.o utilidades.o
 
-all: problema2 testerproblema3 problema4 problema5
+all: problema2 testerproblema3 problema4 problema5 problema6
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c -o $@ $<

@@ -1,5 +1,6 @@
 #include "utilidades.h"
 #include "goloso.h"
+#include <list>
 
 std::size_t computar_hash(Isomorfismo iso) {
   // http://stackoverflow.com/questions/20511347/a-good-hash-function-for-a-vector
@@ -11,12 +12,12 @@ std::size_t computar_hash(Isomorfismo iso) {
 }
 
 bool busqueda_lineal(
-    std::vector<std::pair<std::size_t, int>> lista_tabu,
+    const std::list<std::pair<std::size_t, int>>& lista_tabu,
     std::size_t hash,
     int* resultado) {
-  for (int i = 0; i < lista_tabu.size(); i++) {
-    if (lista_tabu[i].first == hash) {
-      *resultado = lista_tabu[i].second;
+  for (const auto& x : lista_tabu) {
+    if (x.first == hash) {
+      *resultado = x.second;
       return true;
     }
   }
@@ -24,15 +25,15 @@ bool busqueda_lineal(
 }
 
 
-MCS tabu_search(Grafo &g1, vector<int> &vertices1,
-                Grafo &g2, vector<int> &vertices2) {
+MCS tabu_search(Grafo &g1, std::set<int> &vertices1,
+                Grafo &g2, std::set<int> &vertices2) {
 
   MCS source = goloso(g1, vertices1, g2, vertices2);  
-  std::vector<std::pair<std::size_t, int>> lista_tabu(1000, std::make_pair(0, 0));
-  int indice_lista_tabu = 0;
+  int lista_tabu_limite = 1000;
+  std::list<std::pair<std::size_t, int>> lista_tabu;
 
   int iteraciones_sin_mejorar = 0;
-  while (iteraciones_sin_mejorar < 100000) {
+  while (iteraciones_sin_mejorar < 10000) {
     //std::cerr << "source.aristas = " << source.aristas
     //          << " (" << iteraciones_sin_mejorar << ")" << std::endl;
     MCS mejor_tabu = {.isomorfismo = Isomorfismo(), .aristas = 0};
@@ -44,10 +45,11 @@ MCS tabu_search(Grafo &g1, vector<int> &vertices1,
       // los vértices de g1.
       // Notar que si #vertices1 = #vertices2 el algoritmo termina en O(1)
       // Caso bueno: 3
-      for (unsigned int i = 0; i < vertices2.size(); i++) {
+      vector<int> vertices = set_to_vector(vertices2);
+      for (unsigned int i = 0; i < vertices.size(); i++) {
         for (unsigned int j = 0; j < source.isomorfismo.size(); j++) {
           Isomorfismo iso_actual = source.isomorfismo;
-          std::swap(vertices2[i], iso_actual[j].second);
+          std::swap(vertices[i], iso_actual[j].second);
 
           int aristas = 0;
           if (busqueda_lineal(lista_tabu, computar_hash(iso_actual), &aristas) &&
@@ -85,6 +87,14 @@ MCS tabu_search(Grafo &g1, vector<int> &vertices1,
         }
       }
     }
+    if (mejor_solucion.aristas > 0) {
+      lista_tabu.push_back(std::make_pair(
+            computar_hash(mejor_solucion.isomorfismo),
+            mejor_solucion.aristas));
+      if (lista_tabu.size() > lista_tabu_limite) { 
+        lista_tabu.pop_front();
+      }
+    }
     if (mejor_solucion.aristas == 0) { // Funcion de aspiracion, todo es tabu
       if (mejor_tabu.aristas < source.aristas) {
         iteraciones_sin_mejorar = 0;
@@ -107,12 +117,12 @@ int main(int argc, const char* argv[]) {
   Grafo g1, g2;
   leer_entrada(g1, g2);
 
-  std::vector<int> vertices1, vertices2;
+  std::set<int> vertices1, vertices2;
   for (int i = 0; i < g1.n; i++) {
-    vertices1.push_back(i);
+    vertices1.insert(i);
   }
   for (int i = 0; i < g2.n; i++) {
-    vertices2.push_back(i);
+    vertices2.insert(i);
   }
   
   MCS solucion;

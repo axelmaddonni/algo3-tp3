@@ -12,6 +12,62 @@ Una meteheurística usa los parámetros dados por el usuario sobre unos procedim
 Normalmente, estos procedimientos son heurísticos.
 
 En particular, nosotros utilizaremos la metaheurística del tabu search, que a su vez se basa en la heurística de búsqueda local.
+Una explicación completa de la heurística de tabú search puede encontrarse en \cite{tabusearch}.
+
+Veamos nuestra implementación.
+
+
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+  \caption{Pseudocódigo del procedimiento Tabu Search}
+  \label{algo:6-1}
+    \Procedure{tabu\_search}
+              {\texttt{Grafo} $g1$,
+               \texttt{vector<int>} $vertices1$,
+               \texttt{Grafo} $g2$,
+               \texttt{vector<int>} $vertices2$} 
+    \State $source \gets goloso(g1, vertices1, g2, vertices2)$
+    \State $lista\_tabu \gets lista(1000, make\_pair(0, 0))$
+    \State $indice\_lista\_tabu \gets 0$
+    \State Inicializar estructuras relacionadas con el criterio de parada.
+    \While {criterio de parada} 
+       \State $mejor\_tabu \gets \{.isomorfismo = Isomorfismo(), .aristas = 0\}$
+       \State $mejor\_solucion \gets \{.isomorfismo = Isomorfismo(), .aristas = 0\}$
+       \For $vecino \in vecindad(source)$
+           \State $aristas \gets buscar(lista_tabu, hash(vecino))$
+           \If {$aristas = 0$}
+               \State Source es una solución tabu.
+               \If {$aristas > mejor\_tabu.aristas$}
+                   \State $mejor\_tabu.aristas \gets aristas$
+                   \State $mejor\_tabu.isomorfismo \gets vecino$
+                   \State continue
+               \EndIf
+           \Else
+               \State $aristas = contar\_aristas\_isomorfismo(g1, g2, vecino)$
+               \If {$aristas > mejor\_tabu.aristas$}
+                   \State $mejor\_solucion.aristas \gets aristas$
+                   \State $mejor\_solucion.isomorfismo \gets vecino$
+                   \State continue
+               \EndIf
+           \EndIf
+        \EndFor
+        \If {$mejor\_solucion.aristas = 0$}
+           \State Todas las soluciones son tabu.
+           \State $source \gets mejor\_tabu$
+       \Else
+           \State $source \gets mejor\_solucion$
+       \EndIf
+
+       \State $hash = hash(source)$
+
+
+    \EndWhile
+           
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+
 
 
 
