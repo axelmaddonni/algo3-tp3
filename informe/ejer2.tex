@@ -37,7 +37,7 @@ Sin más que analizar, pasemos a ver el pseudocódigo del algoritmo. Vale la pen
 
 \begin{algorithm}[H]
   \begin{algorithmic}[1]
-  \caption{Pseudocódigo del procedimiento BackTracking}
+  \caption{Pseudocódigo del procedimiento Backtracking}
   \label{algo:2-1}
     \Procedure{bt}{\texttt{Grafo} $g1$, \texttt{Grafo} $g2$, \texttt{vector<int>} $vertices1$, \texttt{vector<int>} $vertices2$, \texttt{Isomorfismo} $iso$}
       \If {$solucion.aristas == MIN(g1.m, g2.m)$}
@@ -118,7 +118,7 @@ Además, $v_i$ para $i = 1,2$ es el tamaño del vector $verticesi$.
 
 El algoritmo debe ser llamado de la siguiente manera:
 
-\[bt(grafo1, \{1,...,|V(grafo1)|\}, grafo2, \{1,...,|V(grafo2)\}, \{ \})\].
+\[bt(grafo1, \{1,...,|V(grafo1)|\}, grafo2, \{1,...,|V(grafo2)|\}, \{ \})\].
 
 Dado que inicialmente tódos los vértices están sin ser utilizados, y el isomorfismo es el isomorfismo vacío.
 
