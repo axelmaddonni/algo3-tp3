@@ -54,6 +54,31 @@ int testearCorrectitudMCS(const CographTree& cografo, int tamGrafoCompleto, cons
 	}
 }
 
+void imprimirCaso(Grafo_adjlist g, int tamGrafoCompleto) {
+	int aristasCompleto = tamGrafoCompleto * (tamGrafoCompleto-1) / 2;
+	cout << g.n << " " << g.m << " " << tamGrafoCompleto << " " << aristasCompleto << std::endl;
+
+	// Imprimo cografo (los indices comienzan en 0)
+	set<int> impresos;
+	for (auto imap: g.adj_list) {
+		for (int ady: g.adj_list[imap.first]) {
+			if (impresos.count(ady) == 0)
+				cout << imap.first-1 << " " << ady-1 << std::endl; 
+		}
+		impresos.insert(imap.first);
+	}
+
+	// Imprimo grafo completo
+	int aristas_imprimir = tamGrafoCompleto-1;
+	for (int i = 0; i < tamGrafoCompleto; ++i)	{
+		for (int j = i+1; j < (aristas_imprimir+i+1) ; ++j)	{
+			cout << i << " " << j << endl;
+		}
+		aristas_imprimir--;
+	}
+
+}
+
 int main(int argc, char const *argv[]) {
 
 	srand (time(NULL));
@@ -153,10 +178,25 @@ int main(int argc, char const *argv[]) {
 		}
 		cout << "Soluciones correctas: " << solcorrectas << endl;
 		cout << "Soluciones incorrectas: " << solincorrectas << endl;
+	} else if ( opt.compare("casorandom") == 0  && argc == 4){
+
+		int n = atoi(argv[2]);
+		int tamGrafoCompleto = atoi(argv[3]);
+
+		CographTree cografo(n, 1);
+
+		imprimirCaso(cografo.representacionGrafo(), tamGrafoCompleto);
+
+		Grafo_adjlist mcs = subgrafoInducido(cografo.representacionGrafo(), cografo.nodosMCS(tamGrafoCompleto));
+
+		cout << mcs.m << endl;
+
 	} else {
 		cout << "ERROR EN LOS PARAMETROS. Modo de uso: " << endl;
 		cout << " ./testerproblema3 (correctitud) < test.in" << endl;
 		cout << " ./testerproblema3 random <tamCografo> <tamGrafoCompleto>" << endl;
 		cout << " ./testerproblema3 nrandom <cantCografos> <tamCografo> <cantGrafosCompletos>" << endl;
+		cout << " ./testerproblema3 casorandom <tamCografo> <tamGrafoCompleto>" << endl;
 	}
 }
+
