@@ -14,7 +14,17 @@ Normalmente, estos procedimientos son heurísticos.
 En particular, nosotros utilizaremos la metaheurística del tabu search, que a su vez se basa en la heurística de búsqueda local.
 Una explicación completa de la heurística de tabú search puede encontrarse en \cite{tabusearch}.
 
-Veamos nuestra implementación.
+Expliquemos los detalles de nuestra implementación antes de ver el pseudocódigo.
+
+Nuestra lista tabú en nuestro caso debería contener soluciones posibles, es decir, isomorfismos. Sin embargo, como comparar isomorfismos es muy caro, decidimos usar una función de hash y almacenar este valor. De esta manera, buscar soluciones en la lista tabú se vuelve mucho menos costoso.
+
+Nuestra función de aspiración, es decir, nuestro método para elegir el isomorfismo inicial de la siguiente iteración hace lo obvio si hay alguna solución no tabú: elige la mejor.
+Sin embargo, si todas las soluciones son tabú, elegiremos la mejor solución tabú en cuestión.
+
+No creemos que fuera adecuado elegir ningun \emph{movimiento prohibido}, como vimos en la teórica (la definición de movimiento prohibido no existe en la definición original de la metaheuristica tabu search, si no que es una adición posterior), dado que no parecía razonable prohibir ningún movimiento ni ninguna solución particular (más allá de la tabú).
+Esto se debe principalmente a que no hay características que hagan que, inmediatamente, podamos descartar una solución y declararla inviable.
+
+Sin más que explicar, veamos nuestra implementación.
 
 
 \begin{algorithm}[H]
@@ -36,7 +46,7 @@ Veamos nuestra implementación.
        \For $vecino \in vecindad(source)$
            \State $aristas \gets buscar(lista_tabu, hash(vecino))$
            \If {$aristas = 0$}
-               \State Source es una solución tabu.
+               \Comment Source es una solución tabu.
                \If {$aristas > mejor\_tabu.aristas$}
                    \State $mejor\_tabu.aristas \gets aristas$
                    \State $mejor\_tabu.isomorfismo \gets vecino$
@@ -51,16 +61,22 @@ Veamos nuestra implementación.
                \EndIf
            \EndIf
         \EndFor
+        \If {$mejor\_solucion.aristas > 0$}
+            \State $lista\_tabu.push\_back($
+            \State \,\,  $make\_pair(
+              hash(mejor\_solucion.isomorfismo),
+              mejor\_solucion.aristas))$
+            \If {$lista\_tabu.size() > lista\_tabu\_limite$}
+                 \State $lista\_tabu.pop\_front()$
+            \EndIf
+        \EndIf
         \If {$mejor\_solucion.aristas = 0$}
-           \State Todas las soluciones son tabu.
+           \Comment Todas las soluciones son tabu.
            \State $source \gets mejor\_tabu$
        \Else
            \State $source \gets mejor\_solucion$
        \EndIf
-
-       \State $hash = hash(source)$
-
-
+       \State Actualizar estructuras relacionadas con el criterio de parada.
     \EndWhile
            
 		\EndProcedure
