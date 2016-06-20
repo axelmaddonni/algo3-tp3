@@ -1,0 +1,23 @@
+
+En este trabajo desarrollaremos varias soluciones para el problema de el subgrafo común máximo entre dos grafos $G_1$ y $G_2$, con respecto a los vértices. 
+
+Más precisamente, dados $G_1 = (V_1 , E_1)$ y $G_2 = (V_2 , E_2)$ dos grafos simples, el problema de máximo subgrafo común consiste en encontrar un grafo $H = (V_H , E_H)$ isomorfo tanto a un subgrafo de $G_1$ como a un subgrafo de $G_2$ que maximice $|E_H|$.
+
+Nuestros acercamientos al problema van a ser dos. Primero, vamos a desarrollar una solución exacta, es decir, una solución que encuentra el subgrafo común que maximiza la cantidad de aristas.
+Sin embargo, como veremos, esta forma de resolverlo no es razonable dado que se desconoce una solución en tiempo polinomial, por lo que encontrar la mejor solución no es viable para entradas grandes.
+
+Luego, veremos varios algoritmos aproximados para el problema del subgrafo común máximo. Estos consisten en sacrificar exactitud a cambio de tiempo de ejecución. Su complejidad será polinomial, pero como dijimos, las soluciones que generen serán \emph{aproximadas}, o sea, no exactas.
+
+
+\subsection{Experimentación}
+
+La experimentación en general sigue los pasos sugeridos por las consignas del trabajo. Los métodos de generación de casos estarán explicados al final de cada sección de experimentación, o en su defecto, en el apéndice.
+
+Sobre la experimentación de tiempos, como las complejidades en general dependen de muchos parámetros, los resultados se vuelven difíciles de representar.
+Es por eso que seguiremos el mismo método de representación que utilizamos en los TPs anteriores.
+Supongamos que la complejidad del algoritmo es $O(f(n,m))$, entonces nuestro gráfico tendrá $f(n, m)$ en el eje $x$ y $T(n, m) = \text{``El tiempo que tarda el algoritmo para una entrada de tamaño (n,m)''}$ en el eje $y$, de esta manera, nos interesará ver que el gráfico es el de una constante.
+
+Por supuesto, también haremos experimentos en los que fijamos parámetros y movemos otros, para corroborar que las performances se comportan como deben. En caso de que las complejidades dependan de un parámetro, haremos un gráfico clásico, en caso contrario, haremos lo mismo que explicamos anteriormente.
+
+
+
