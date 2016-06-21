@@ -8,22 +8,22 @@ Hicimos dos versiones distintas. La primer versión consiste en mapear los nodos
   \begin{algorithmic}[1]
   \caption{Pseudocódigo de la primer heurística golosa}
   \label{algo:4-1}
-    \Procedure{goloso1}{\texttt{Grafo} $g1$, \texttt{Grafo} $g2$, \texttt{vector<int>} $vertices1$, \texttt{vector<int>} $vertices2$} $\to$ \texttt{MCS}
+    \Procedure{goloso1}{\texttt{Grafo} $g1$, \texttt{Grafo} $g2$, \texttt{set<int>} $vertices1$, \texttt{set<int>} $vertices2$} $\to$ \texttt{MCS}
       \State $ordenar\_por\_grado(vertices1, g1)$ 
-        \Comment $O(n^2)$ 
+        \Comment $O(n_1^2)$ 
       \State $ordenar\_por\_grado(vertices2, g2)$ 
-        \Comment $O(n^2)$ 
+        \Comment $O(n_2^2)$ 
       \State \texttt{MCS} $solucion$ 
         \Comment $O(1)$ 
 
 	  \For { \texttt{int} $i = 0$, $i < vertices1.tamanio()$, $i++$ }
 	  \State  $solucion.isomorfismo.insertar\_atras(<vertices1[i],vertices2[i]>)$
-      \Comment $O(1)$
+      \Comment $n_1$ veces $O(1)$
     	  \EndFor
 
 	  \State \texttt{int} $aristas$
 	  \State $ aristas = contar\_aristas\_isomorfismo(g1,g2,u,v, solucion.isomorfismo)$
-      \Comment $O(g2.n)$
+      \Comment $O(n_1^2)$
       \State \Return $solucion$
       \EndProcedure
 	\end{algorithmic}
@@ -44,35 +44,39 @@ El pseudocódigo es el siguiente
         \Comment $O(1)$ 
       \State $solucion.aristas = 0$ 
       \State \texttt{int} $vertice1 = mayor\_adj(vertices1,g1)$ 
-      \Comment $O(g1.n)$ 
+      \Comment $O(n_1)$ 
       \State \texttt{int} $vertice2 = mayor\_adj(vertices2,g2)$ 
-      \Comment $O(g2.n)$ 
+      \Comment $O(n_2)$ 
       \State $solucion.isomorfismo.insertar\_atras(<vertice1,vertice2>)$
       \Comment $O(1)$
       \State $vertices1.borrar(vertice1)$ 
-      \Comment $O(g1.n)$ 
+      \Comment $O(\log(n_1))$ 
       \State $vertices2.borrar(vertice2)$ 
-      \Comment $O(g2.n)$
+      \Comment $O(\log(n_2))$
       \While {$ vertices1.tamanio() \neq 0 $}
-      \Comment $g1.n veces$
-	  \State \texttt{par<int,int>}  $par\_mayor\_deg = <vertices1.primero(),vertices2.primero()>$
+	  \State \texttt{par<int,int>}  $par\_mayor\_deg = <vertices1.primero(),vertices2.primero()>$ 
+    \Comment $n_1$ veces $O(1)$
 	  \For { $u \in vertices1$ }
 	  \For { $v \in vertices2$ }
 	  \State \texttt{int} $aristas$
+    \Comment $n_1^2n_2$ veces $O(1)$
 	  \State $ aristas = contar\_aristas\_isomorfismo(g1,g2,u,v, solucion.isomorfismo)$
-      \Comment $O(g2.n)$
+    \Comment $n_1^2n_2$ veces $O(n_1^2)$
       \If { $aristas > solucion.aristas$}
+      \Comment $n_1^2n_2$ veces $O(1)$
       \State $solucion.aristas = aristas$
+      \Comment $n_1^2n_2$ veces $O(1)$
       \State $par\_mayor\_deg = <u,v>$
+      \Comment $n_1^2n_2$ veces $O(1)$
       \EndIf
 	  \EndFor
 	  \EndFor	 
 	  \State  $solucion.isomorfismo.insertar\_atras(par\_mayor\_deg)$
-      \Comment $O(1)$
+      \Comment $n_1$ veces $O(1)$
 	  \State $ vertices1.borrar(par\_mayor\_deg.primero)$
-      \Comment $O(g1.n)$
+      \Comment $n_1$ veces $O(\log(n_1))$
 	  \State $ vertices1.borrar(par\_mayor\_deg.segundo)$
-      \Comment $O(g1.n)$
+      \Comment $n_1$ veces $O(\log(n_2))$
 	  \EndWhile      
         \State \Return $solucion$
       \EndProcedure
@@ -82,7 +86,7 @@ El pseudocódigo es el siguiente
 
 \subsection{Complejidad temporal de peor caso}
 
-La complejidad del algoritmo es $O(g2.n^5)$ o mas precisamente $O(g1.n^{3}.g2.n)$.
+La complejidad del algoritmo es precisamente $O(n_1^4 n_2)$.
 
 \subsection{Instancias no óptimas}
 
@@ -130,4 +134,6 @@ Un ejemplo donde la heuristica golosa versión 2 puede ser tan mala como uno qui
 
 Para estos casos la heuristica siempre va a devolver un isomorfismo con n aristas, ya que mapeara los nodos de la estrella con los del grafo completo. En vez de esto la solución óptima sería $G\_n$, o sea tendría $\frac{n.(n-1)}{2}$ aristas, por lo cual para n suficientemente grande tenemos una diferencia entre el óptimo y el resultado obtenido tan grande como queramos.
 
+\subsection{Performance del algoritmo}
 \input{ejer4_exp.tex}
+

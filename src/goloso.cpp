@@ -34,6 +34,7 @@ int mayor_adj(std::set<int>& lista, Grafo g) {
 }
 
 
+/*
 MCS goloso(
     Grafo g1, std::set<int> vertices1,
     Grafo g2, std::set<int> vertices2) {
@@ -70,26 +71,41 @@ MCS goloso(
 
   return solucion;
 }
+*/
 
+void sort_adj(std::vector<int> &lista, Grafo g){
+  for (unsigned int i = 1; i < lista.size(); i++){		
+    int v = lista[i];
+    int j = i - 1;
+    while(j >= 0 && g.grados[v] > g.grados[lista[j]]) {
+      lista[j + 1] = lista[j];
+      j--; 		
+    }
+    lista[j+1] = v;
+  }
+}
 
-// MCS goloso(
-//     Grafo g1, std::vector<int> &vertices1, 
-//     Grafo g2, std::vector<int> &vertices2) {
-// 
-//   sort_adj(vertices1, g1);
-//   sort_adj(vertices2, g2);
-// 
-//   MCS solucion;
-// 
-//   for (unsigned int i = 0; i < vertices1.size(); i++) {
-//     solucion.isomorfismo.push_back(std::make_pair(vertices1[i], vertices2[i]));
-//   }
-// 
-//   int aristas = contar_aristas_isomorfismo(g1, g2, solucion.isomorfismo);
-//   solucion.aristas = aristas;
-// 
-//   return solucion;
-// }
+MCS goloso(
+    Grafo g1, std::set<int> vertices_1, 
+    Grafo g2, std::set<int> vertices_2) {
+
+  std::vector<int> vertices1(vertices_1.begin(), vertices_1.end());
+  std::vector<int> vertices2(vertices_2.begin(), vertices_2.end());
+
+  sort_adj(vertices1, g1);
+  sort_adj(vertices2, g2);
+
+  MCS solucion;
+
+  for (unsigned int i = 0; i < vertices1.size(); i++) {
+    solucion.isomorfismo.push_back(std::make_pair(vertices1[i], vertices2[i]));
+  }
+
+  int aristas = contar_aristas_isomorfismo(g1, g2, solucion.isomorfismo);
+  solucion.aristas = aristas;
+
+  return solucion;
+}
 
 
 
