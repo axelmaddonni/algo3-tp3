@@ -1,0 +1,133 @@
+\subsection{Explicación detallada del algoritmo}
+
+Como vimos en el ejercicio 2 este problema no parece poder ser resuelto en tiempo polinomial, para poder hacercarnos a una solución en tiempos razonables sacrificaremos la seguridad de conseguir siempre la opción óptima a cambio de mejorar la complejidad. Esto se hará a partir de la implementación de una heuristica golosa, un programa que a partir de ciertas suposiciones y reglas, no necesariamente validas siempre pero muchas veces útiles, nos permiten tomar desiciones rapidamente. Será golosa porque tomará desiciones en base a mejorar su estado actual sin pensar a la larga.
+
+Hicimos dos versiones distintas. La primer versión consiste en mapear los nodos de mayor grado entre si hasta agotar todos los del grafo mas chico. Esto puede funcionar en algunos grafos pero claramente no siempre será la mejor opción.
+
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+  \caption{Pseudocódigo de la primer heurística golosa}
+  \label{algo:4-1}
+    \Procedure{goloso1}{\texttt{Grafo} $g1$, \texttt{Grafo} $g2$, \texttt{vector<int>} $vertices1$, \texttt{vector<int>} $vertices2$} $\to$ \texttt{MCS}
+      \State $ordenar\_por\_grado(vertices1, g1)$ 
+        \Comment $O(n^2)$ 
+      \State $ordenar\_por\_grado(vertices2, g2)$ 
+        \Comment $O(n^2)$ 
+      \State \texttt{MCS} $solucion$ 
+        \Comment $O(1)$ 
+
+	  \For { \texttt{int} $i = 0$, $i < vertices1.tamanio()$, $i++$ }
+	  \State  $solucion.isomorfismo.insertar\_atras(<vertices1[i],vertices2[i]>)$
+      \Comment $O(1)$
+    	  \EndFor
+
+	  \State \texttt{int} $aristas$
+	  \State $ aristas = contar\_aristas\_isomorfismo(g1,g2,u,v, solucion.isomorfismo)$
+      \Comment $O(g2.n)$
+      \State \Return $solucion$
+      \EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+
+La segunda heuristica tiene una mayor complejidad temporal pero da soluciones de calidad superior. Inicia haciendo un mapeo entre el nodo de mayor grado de $G_1$ y $G_2$ luego expande este isomorfismo buscando en cada iteración agregar el que maximice la cantidad de aristas del isomorfismo. Si hay empates se queda con la primera.
+
+
+El pseudocódigo es el siguiente
+
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+  \caption{Pseudocódigo de la heurística golosa}
+  \label{algo:4-1}
+    \Procedure{goloso}{\texttt{Grafo} $g1$, \texttt{Grafo} $g2$, \texttt{vector<int>} $vertices1$, \texttt{vector<int>} $vertices2$} $\to$ \texttt{MCS}
+      \State \texttt{MCS} $solucion$ 
+        \Comment $O(1)$ 
+      \State $solucion.aristas = 0$ 
+      \State \texttt{int} $vertice1 = mayor\_adj(vertices1,g1)$ 
+      \Comment $O(g1.n)$ 
+      \State \texttt{int} $vertice2 = mayor\_adj(vertices2,g2)$ 
+      \Comment $O(g2.n)$ 
+      \State $solucion.isomorfismo.insertar\_atras(<vertice1,vertice2>)$
+      \Comment $O(1)$
+      \State $vertices1.borrar(vertice1)$ 
+      \Comment $O(g1.n)$ 
+      \State $vertices2.borrar(vertice2)$ 
+      \Comment $O(g2.n)$
+      \While {$ vertices1.tamanio() \neq 0 $}
+      \Comment $g1.n veces$
+	  \State \texttt{par<int,int>}  $par\_mayor\_deg = <vertices1.primero(),vertices2.primero()>$
+	  \For { $u \in vertices1$ }
+	  \For { $v \in vertices2$ }
+	  \State \texttt{int} $aristas$
+	  \State $ aristas = contar\_aristas\_isomorfismo(g1,g2,u,v, solucion.isomorfismo)$
+      \Comment $O(g2.n)$
+      \If { $aristas > solucion.aristas$}
+      \State $solucion.aristas = aristas$
+      \State $par\_mayor\_deg = <u,v>$
+      \EndIf
+	  \EndFor
+	  \EndFor	 
+	  \State  $solucion.isomorfismo.insertar\_atras(par\_mayor\_deg)$
+      \Comment $O(1)$
+	  \State $ vertices1.borrar(par\_mayor\_deg.primero)$
+      \Comment $O(g1.n)$
+	  \State $ vertices1.borrar(par\_mayor\_deg.segundo)$
+      \Comment $O(g1.n)$
+	  \EndWhile      
+        \State \Return $solucion$
+      \EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+
+\subsection{Complejidad temporal de peor caso}
+
+La complejidad del algoritmo es $O(g2.n^5)$ o mas precisamente $O(g1.n^{3}.g2.n)$.
+
+\subsection{Instancias no óptimas}
+
+Un ejemplo donde la heuristica golosa versión 2 puede ser tan mala como uno quiera es cuando en su entrada recibe al grafo completo $G\_n$ y a un grafo que resulta de la unión de $G\_n$ con $S\_n$, el cual es ilustrado mas abajo. 
+
+\begin{tikzpicture}[shorten >=1pt,auto,node distance=1.9cm,
+                    semithick]
+  \tikzstyle{every state}=[fill=red,draw=none,text=white]
+
+	\node[state]	(0)		 		  {$2$};
+	\node[state]	(1) [right of=0]  {$4$};
+	\node[state]	(2) [below of=0]  {$3$};
+	\node[state]	(3) [left of=0] 	  {$0$};
+	\node[state]	(4) [above of=0]	  {$1$};
+	\node[state]	(5) [right of=1]	  {$5$};
+	\node[state]	(6) [above of=5]  {$6$};
+	\node[state]	(7) [right of=6]  {$7$};
+	\node[state]	(8) [right of=5]  {$8$};
+	\node[state, fill=blue]	(9) [right of=8]	  {$0$};
+	\node[state, fill=blue]	(10) [above of=9]  {$1$};
+	\node[state, fill=blue]	(11) [right of=9]  {$2$};
+	\node[state, fill=blue]	(12) [right of=10]  {$3$};
+
+
+	\path	
+		(0) edge[]				node {} (1)
+         	edge[]				node {} (2)
+         	edge[]				node {} (4)
+         	edge[]				node {} (3)
+		(1) edge[]				node {} (5)
+		(5) edge[]				node {} (6)
+		    edge[]				node {} (7)
+		    edge[]				node {} (8)
+		(6) edge[]				node {} (7)
+		    edge[]				node {} (8)
+		(7) edge[]				node {} (8)
+		(9) edge[]				node {} (10)
+		    edge[]				node {} (11)
+		    edge[]				node {} (12)
+		(10) edge[]				node {} (11)
+		    edge[]				node {} (12)
+		(11) edge[]				node {} (12);
+
+\end{tikzpicture}
+
+Para estos casos la heuristica siempre va a devolver un isomorfismo con n aristas, ya que mapeara los nodos de la estrella con los del grafo completo. En vez de esto la solución óptima sería $G\_n$, o sea tendría $\frac{n.(n-1)}{2}$ aristas, por lo cual para n suficientemente grande tenemos una diferencia entre el óptimo y el resultado obtenido tan grande como queramos.
+
+input{ejer4_exp.tex}
