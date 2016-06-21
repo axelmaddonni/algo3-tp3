@@ -15,6 +15,11 @@ goloso_bueno = [[260, 9, 37, 57, 23, 193, 51, 353, 25, 161, 228, 105, 9, 150, 27
 def mean(xs):
     return sum(map(float, xs)) / len(xs)
 
+def stddev(xs):
+    u = sum(map(float, xs)) / len(xs)
+    #return (sum(map(lambda x: (mean - x)**2.0, xs)) / len(xs))**0.5
+    return min(map(lambda x: (u - x)**2.0, xs))**0.5
+
 
 def barplot_calidad1():
     N = 10
@@ -23,9 +28,11 @@ def barplot_calidad1():
 
     fig, ax = plt.subplots()
 
-    rects1 = ax.bar(ind, map(mean, goloso_malo), width, color='r')
+    rects1 = ax.bar(ind, map(mean, goloso_malo), width, color='r',
+            yerr=map(stddev, goloso_malo))
 
-    rects2 = ax.bar(ind + width, map(mean, goloso_bueno), width, color='y')
+    rects2 = ax.bar(ind + width, map(mean, goloso_bueno), width, color='y',
+            yerr=map(stddev, goloso_malo))
 
     ax.set_ylabel('Aristas')
     ax.set_title('Comparacion goloso')
@@ -33,6 +40,7 @@ def barplot_calidad1():
     ax.set_xticklabels(casos)
 
     ax.legend((rects1[0], rects2[0]), ('Goloso malo', 'Nuestro Algoritmo'), loc=2)
+    plt.savefig('fig.pdf')
     plt.show()
 
 def main():
