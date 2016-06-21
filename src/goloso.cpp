@@ -34,7 +34,6 @@ int mayor_adj(std::set<int>& lista, Grafo g) {
 }
 
 
-/*
 MCS goloso(
     Grafo g1, std::set<int> vertices1,
     Grafo g2, std::set<int> vertices2) {
@@ -71,8 +70,8 @@ MCS goloso(
 
   return solucion;
 }
-*/
 
+/*
 void sort_adj(std::vector<int> &lista, Grafo g){
   for (unsigned int i = 1; i < lista.size(); i++){		
     int v = lista[i];
@@ -107,5 +106,5 @@ MCS goloso(
   return solucion;
 }
 
-
+*/
 
