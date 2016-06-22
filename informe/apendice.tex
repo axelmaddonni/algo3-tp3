@@ -47,3 +47,144 @@ Finalmente, se eligen pesos al azar para cada arista.
 \lstset{language=C++, breaklines=true, basicstyle=\footnotesize}
 \lstset{numbers=left, numberstyle=\tiny, stepnumber=1, numbersep=5pt, tabsize=2}
 
+Durante algunas partes del informe al explicar nuestras implementaciones mencionamos u obviamos algunas funciones para no volver demasiado extensa o densa la explicación. Dejamos aquí el pseudocódigo de algunos de los métodos utilizados para evacuar posibles dudas.
+
+Los algoritmos de lectura y escritura no fueron tenidos en cuenta para el cálculo de complejidad ya que lo que intentabamos cuantificar era la complejidad de los algoritmos para el calculo del MCS propiamente dichos unicamente.
+
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+  \caption{Pseudocódigo del procedimiento para leer la entrada}
+  \label{algo:ap-2}
+    \Procedure{leer\_entrada}{\texttt{Grafo} $g1$, \texttt{Grafo} $g2$}
+    \State $leo\_entrada$ $>>$ $g1.n$ $>>$ $g1.m$ $>>$ $g2.n$ $>>$ $g2.m$
+    \Comment $O(1)$
+    	\State $g1.adj\_matrix \gets$ \texttt{$vector<vector<bool>>$} $nuevo\_vector1[g1.n][g1.n,false]$
+    \Comment $O(g1.n)$
+    	\State $g2.adj\_matrix \gets$ \texttt{$vector<vector<bool>>$} $nuevo\_vector2[g2.n][g2.n,false]$
+    \Comment $O(g2.n)$
+    \State $g1.grafos$ = \texttt{vector<int>} $vector[g1.n,0]$
+    \Comment $O(g1.n)$
+    \State $g2.grafos$ = \texttt{vector<int>} $vector[g2.n,0]$
+    \Comment $O(g2.n)$
+    \For{\texttt{int} $i = 0$; $i < g1.m$; $i++$}
+         \State \texttt{int} $u$, $v$
+		 \Comment $g1.m$ veces $O(1)$ 
+         \State $leo\_entrada$ $>>$ $u$ $>>$ $v$
+		 \Comment $g1.m$ veces $O(1)$ 
+		 \State $g1.adj\_matrix[u][v] = true$
+		 \Comment $g1.m$ veces $O(1)$ 		 
+		 \State $g1.adj\_matrix[v][u] = true$
+		 \Comment $g1.m$ veces $O(1)$ 
+		 \State $g1.grados[u]++$
+		 \Comment $g1.m$ veces $O(1)$ 
+		 \State $g2.grados[v]++$
+		 \Comment $g1.m$ veces $O(1)$ 
+    \EndFor
+    \For{\texttt{int} $i = 0$; $i < g2.m$; $i++$}
+         \State \texttt{int} $u$, $v$
+		 \Comment $g2.m$ veces $O(1)$ 
+         \State $leo\_entrada$ $>>$ $u$ $>>$ $v$
+		 \Comment $g2.m$ veces $O(1)$ 
+		 \State $g2.adj\_matrix[u][v] = true$
+		 \Comment $g2.m$ veces $O(1)$ 
+		 \State $g2.adj\_matrix[v][u] = true$
+		 \Comment $g2.m$ veces $O(1)$ 
+		 \State $g2.grados[u]++$
+		 \Comment $g2.m$ veces $O(1)$ 
+		 \State $g2.grados[v]++$
+		 \Comment $g2.m$ veces $O(1)$ 
+    \EndFor
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+
+%
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+  \caption{Pseudocódigo del procedimiento para imprimir la solucion}
+  \label{algo:ap-3}
+    \Procedure{imprimir\_solucionH}{\texttt{bool} $inverso$, \texttt{vector<int,int>} $aristas$, \texttt{MCS} solucion}
+    \State $imprimo\_valores$ $>>$ $solucion.isomorfismo.tamanio()$ $>>$ $" "$ $>>$ $aristas.tamanio()$ $>>$ $" "$ $>>$ $final\_de\_linea$
+    \Comment $O(1)$
+    \For{ $p \in solucion.isomorfismo$}
+		\If{$\neg inverso$}         
+        \Comment A lo sumo $g1.n$ veces $O(1)$
+		    \State $imprimo\_valores$ $>>$ $p.primero$ $>>$ " "
+        \Comment $g1.n$ veces $O(1)$
+		 \Else
+		    \State $imprimo\_valores$ $>>$ $p.segundo$ $>>$ " "
+        \Comment $g1.n$ veces $O(1)$
+
+		 \EndIf 
+		
+    \EndFor
+    \For{ $p \in solucion.isomorfismo$}
+		\If{$\neg inverso$}         
+        \Comment $g1.n$ veces $O(1)$
+		    \State $imprimo\_valores$ $>>$ $p.segundo$ $>>$ " "
+        \Comment $g1.n$ veces $O(1)$
+		 \Else
+		    \State $imprimo\_valores$ $>>$ $p.primero$ $>>$ " "
+        \Comment $g1.n$ veces $O(1)$
+
+		 \EndIf 
+		
+    \EndFor
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+El programa analiza de cuantas aristas sería el isomorfismo si se le agregara el mapeo entre $v1$ y $v2$, siendo estos nodos de $g1$ y $g2$ respectivamente.
+
+\begin{algorithm}[H]
+  \begin{algorithmic}[1]
+  \caption{Pseudocódigo del procedimiento para contar aristas del isomorfismo}
+  \label{algo:ap-3}
+    \Procedure{contar\_aristas\_isomorfismo\_agregar}{\texttt{Grafo} $g1$, \texttt{Grafo} $g2$, \texttt{int} $v1$, \texttt{int} $v2$, \texttt{Isomorfismo} $iso$ } $\rightarrow$ \texttt{int}
+    \State \texttt{int} $aristas = 0$
+    \Comment $O(1)$
+    \For{ $i = 0 $; $ i \leq iso.size() $; $i++$}
+		\If{$i < iso.tamanio$}         
+        \Comment $g1.n$ veces $O(1)$
+		\State \texttt{int} vg1 = iso[i].primero
+		\Comment $g1.n$ veces $O(1)$
+		\State \texttt{int} vg2 = iso[i].primero
+		\Comment $g1.n$ veces $O(1)$
+		 \Else
+		 \State \texttt{int} vg1 = v1
+		\Comment $g1.n$ veces $O(1)$
+
+		 \State \texttt{int} vg2 = v2
+		\Comment $g1.n$ veces $O(1)$
+
+		 \EndIf 
+
+		\For{$j = 0 $; $ j \leq iso.size() $; $j++$}
+
+		\If{$i < iso.tamanio$}         
+        \Comment $g1.n$ veces $O(1)$
+		\State \texttt{int} ug1 = iso[j].primero
+		\State \texttt{int} ug2 = iso[j].primero
+		 \Else
+		 \State \texttt{int} ug1 = v1
+		\Comment $g1.n$ veces $O(1)$
+
+		 \State \texttt{int} ug2 = v2
+		\Comment $g1.n$ veces $O(1)$
+
+		 \EndIf 
+		\If{$g1.adj\_matrix[vg1][ug1] \land g2.adj\_matrix[vg2][ug2] $}
+		\State aristas++
+		\Comment $g1.n$ veces $O(1)$
+		\EndIf
+	    \EndFor
+
+    \EndFor
+    \Return $aristas/2$
+
+		\EndProcedure
+	\end{algorithmic}
+\end{algorithm}
+
+Hay dos pequeñas variantes a esta función que son utilizadas en nuestro código, estas son $contar\_aristas\_isomorfismo$ y $hallar\_aristas\_isomorfismo$, dado un isomorfismo la primera calcula la cantidad de aristas y la segunda averigua y almacena las aristas del mismo.
