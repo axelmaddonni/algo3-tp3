@@ -21,24 +21,12 @@ int main() {
   MCS solucion;
   if (g1.n < g2.n) {
     solucion = goloso(g1, vertices1, g2, vertices2);
-    end = std::chrono::system_clock::now(); /* Terminamos medicion de tiempo */
-#ifdef TOMAR_TIEMPO
-    std::cerr << std::chrono::duration<double>(end - start).count();
-#endif
-    imprimir_solucionH(
-        false, // inverso
-        hallar_aristas_isomorfismo(g1, g2, solucion.isomorfismo),
-        solucion);
+    std::vector<std::pair<int, int>> aristas = hallar_aristas_isomorfismo(g1, g2, solucion.isomorfismo);
+    imprimir_solucionH(false, aristas, solucion);
   } else {
     solucion = goloso(g2, vertices2, g1, vertices1);
-    end = std::chrono::system_clock::now(); /* Terminamos medicion de tiempo */
-#ifdef TOMAR_TIEMPO
-    std::cerr << std::chrono::duration<double>(end - start).count();
-#endif
-    imprimir_solucionH(
-        true, // inverso
-        hallar_aristas_isomorfismo(g2, g1, solucion.isomorfismo),
-        solucion);
+    std::vector<std::pair<int, int>> aristas = hallar_aristas_isomorfismo(g2, g1, solucion.isomorfismo);
+    imprimir_solucionH(true, aristas, solucion);
   }
 
   return 0;

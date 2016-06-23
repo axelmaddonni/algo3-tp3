@@ -12,21 +12,17 @@ std::vector<int> copiar_sin(std::vector<int> v, int x) {
 
 int contar_aristas_isomorfismo(Grafo g1, Grafo g2, Isomorfismo iso) {
   int aristas = 0;
-  for (const auto p : iso) {
-    int vg1 = p.first;
-    int vg2 = p.second;
-    for (const auto q : iso) {
-      int ug1 = q.first;
-      int ug2 = q.second;
-
-      if (g1.adj_matrix[vg1][ug1] && // ug1 y vg1 estan conectados.
-          g2.adj_matrix[vg2][ug2]) { // ug2 y vg2 estan conectados.
+  for (unsigned int i = 0; i < iso.size(); i++) {
+    auto p = iso[i];
+    for (unsigned int j = i + 1; j < iso.size(); j++) {
+      auto q = iso[j];
+      if (g1.adj_matrix[p.first][q.first] && 
+          g2.adj_matrix[p.second][q.second]) {
         aristas++;
       }
     }
   }
-
-  return aristas / 2; // conte todas 2 veces;
+  return aristas;
 }
 
 std::vector<std::pair<int, int>> hallar_aristas_isomorfismo(
