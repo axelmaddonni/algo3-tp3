@@ -104,7 +104,7 @@ MCS tabu_search(Grafo &g1, std::set<int> &vertices1,
         iteraciones_sin_mejorar++;
       }
       source  = mejor_tabu;
-    } else if (mejor_solucion.aristas < source.aristas) {
+    } else if (mejor_solucion.aristas > source.aristas) {
       source = mejor_solucion;
       iteraciones_sin_mejorar = 0;
     } else {
