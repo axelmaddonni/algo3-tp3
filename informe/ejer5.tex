@@ -1,6 +1,22 @@
-%TODO: +un barplot por dataset de calidad
-%      +4 graficos relación calidad/tiempo para las 3 heuristicas
-%      +2 graficos relación calidad/tiempo para 0 y 1 con instancias grandes
+\subsection{Introducción}
+En la sección anterior implementamos y analizamos una heurística golosa para atacar el problema planteado. Si bien resulta bastante deseable desde el punto de vista de la complejidad temporal (polinomial), tiene el problema de que, como vimos, la solución que nos provee puede ser arbitrariamente mala y en el caso general no tenemos ningún tipo de garantía de que tan cerca puede estar de una solución verdaderamente óptima.
+
+Lo que quisiéramos entonces es poder refinar la solución que nos devuelve la heurística golosa para que se acerce más al máximo real. Para esto probaremos 3 algoritmos de búsqueda local. Dichos algoritmos se basan en la noción de ``vecindad'' de soluciones. Dada una solución fuente $S$, una vecindad de $S$, $N(S)$, es un subconjunto del conjunto de posibles soluciones (en nuestro caso un subconjunto del conjunto de subgrafos comunes) que a diferencia de este último tiene un cardinal lo suficientemente pequeño como para poder ser recorrido en tiempo polinomial. Entonces los algoritmos de búsqueda local se diferenciarán a partir de la vecindad escogida en cada caso.
+
+Es importante resaltar que los algoritmos de búsqueda local no dejan de ser algoritmos heurísticos cuya calidad dependerá tanto de la solución fuente utilizada como de la vecindad escogida.
+
+En particular nosotros escogimos 3 vecindades para el problema, bajo los siguientes rótulos:
+\begin{itemize}
+	\item INTERCAMBIAR
+	\item REEMPLAZAR
+	\item 3-ROTACION 
+\end{itemize}
+
+\subsection{Explicación detallada de los algoritmos}
+En pos de la claridad separamos la explicación y el pseudocódigo de las tres vecindades.
+
+\subsubsection{INTERCAMBIAR}
+Un aspecto importante de nuestro algoritmo goloso es que siempre mapea exactamente todos los vértices del gráfico con menor número de vértices a la hora de devolver la solución. En esta primera vecindad lo que planteamos es considerar todos los \emph{swapeos} posibles para el mapeo de la solución \emph{source}. Formalmente, si $S = \{(v_0, w_{i_1}),\hdots , (v_n, w_{i_n})\}$ es el mapeo de la solución source, entonces la vecindad de tipo INTERCAMBIAR asociada a S es $N_I(S) = \{S' : S' = \{(v_0, w_{i_1}),\hdots , (v_p, w_{i_q}) , \hdots, (v_q, w_{i_p}), (v_n, w_{i_n})\}\}$.
 
 \begin{algorithm}[H]
   \small
@@ -36,7 +52,10 @@
       \EndWhile
     \EndProcedure
   \end{algorithmic}
+  Complejidad: $O(min{n_1, n_2})$
 \end{algorithm}
+
+\subsubsection{REEMPLAZAR}
 
 \begin{algorithm}[H]
   \small
@@ -77,6 +96,8 @@
     \EndProcedure
   \end{algorithmic}
 \end{algorithm}
+
+\subsubsection{3-ROTACION}
 
 \begin{algorithm}[H]
   \small
@@ -120,6 +141,17 @@
   \end{algorithmic}
 \end{algorithm}
 
+\subsection{Complejidades}
+\subsubsection{INTERCAMBIAR}
+$O(min\{m_1, m_2\}n_1^4)$
+
+\subsubsection{REMPLAZAR}
+$O(min\{m_1, m_2\}(n_2-n_1) n_1^3)$
+
+\subsubsection{3-ROTACION}
+$O(min\{m_1, m_2\}n_1^5)$
+
+\subsection{Análisis de performance y calidad}
 
 %%%%%Calidad%%%%%
 \begin{figure}[H]

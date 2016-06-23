@@ -84,6 +84,21 @@ Sin más que explicar, veamos nuestra implementación.
 \end{algorithm}
 
 
+Para la experimentación, decidimos plantear tres tamaños distintos de lista tabú.
+A continuación, detallaremos nuestras expectativas.
+El tamaño más pequeño funcionará muy rápido, dado que la búsqueda es muy efectiva, pero la calidad de los resultados será la peor de entre todas, dado que no podremos guardar muchos resultados previos.
+El tamaño más grande nos proveerá de los mejores resultados (en promedio) pero la búsqueda en la lista será terriblemente lenta, por lo cual no valdrá tanto la pena.
+El tamaño intermedio será, según nuestra creencia, un balance entre velocidad y calidad de los resultados.
+
+En cuanto a los criterios de parada, hay varios de entre los cuales elegir, pero todos se reducen a los mismos dos criterios de parada. Analicemoslos.
+
+\begin{enumerate}
+  \item Primero, podemos setear una cantidad de iteraciones global $k$, y simplemente parar luego de que la cantidad de iteraciones supera $k$. Este es el criterio más simple y esperamos que funcione peor que el siguiente.
+  \item El segundo criterio de parada, es un criterio que se fija cuantas iteraciones pasaron desde que la solución fue mejorada por última vez. Una vez que esa cantidad de iteraciones supera un límite $k$, el algoritmo terminará.
+\end{enumerate}
+
+Esperamos que el segundo criterio funcione mucho mejor, dado que se adapta a lo que esta sucediendo en cada momento: si encuentra cada vez mejores soluciones sigue buscando y si deja de encontrar mejores soluciones termina. Sin embargo, lo bueno del otro criterio de parada, es que tenemos asegurado que va a terminar dentro de un margen de tiempo que podemos determinar muy fácilmente con el límite de iteraciones $k$.
+
 
 
 
