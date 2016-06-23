@@ -103,8 +103,8 @@ int main(int argc, char const *argv[]) {
 		for (int i = 0; i < g.m; i++) {
 			int u, v;
 			cin >> u >> v;
-			g.adj_list[u].push_back(v);
-			g.adj_list[v].push_back(u);
+			g.adj_list[u+1].push_back(v+1);
+			g.adj_list[v+1].push_back(u+1);
 		}
 
 		CographTree cografo(g); 
