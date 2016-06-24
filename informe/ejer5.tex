@@ -221,32 +221,25 @@ También vale mencionar que durante la experimentación se encontraron distintos
 
 En lo gráficos de arriba puede verse una comparación de la calidad de los tres algoritmos, entendiendo a esta como la diferencia en la cantidad de aristas encontradas en promedio por cada uno. Lo primero que puede notarse observando las figuras \ref{fig:5-calidad1} y \ref{fig:5-calidad2} es la clara ventaja de 3-ROTACION sobre las otras heurísticas, tanto en el valor promedio como en los máximos alcanzados. Notar, sin embargo, que la razón por la que la calidad de este algoritmo no se grafica en la figura \ref{fig:5-calidad3} es que, como veremos a continuación, consume mucho más tiempo que sus competidores, por lo que muestrearlo para grafos de tamaño 250 y 300 resultaba ya muy costoso. Sin embargo, podemos ver que la ligera tendencia de superioridad de INTERCAMBIAR sobre REMPLAZAR, que se aprecia  en las primeras dos figuras, se mantiene (e incluso se acentúa) en la tercera. Como INTERCAMBIAR es un caso particular de 3-ROTACION está claro que entonces este último siempre debe ser al menos tan bueno, lo que nos permite deducir que 3-ROTACION sigue siendo la mejor opción en calidad.
 
-Ahora bien, como dijimos antes 3-ROTACION es cara temporalmente. En las figuras \ref{fig:5-tiempo1} y \ref{fig:5-tiempo2} se ve claramente como este algoritmo está órdenes de magnitud por encima de los otros dos en cuanto a tiempo utilizado se refiere. Nótese que fue necesario recurrir a la escala logarítmica pues de lo contrario INTERCAMBIAR y REMPLAZAR hubieran resultado indistinguibles por esta diferencia de órdenes.  Notar que entre estas dos heurísticas no hay una diferencia tan significativa, aunque si nos guiamos por estas dos figuras pareciera que INTERCAMBIAR tiende a consumir un poco más de tiempo. No obstante, la figura \ref{fig:5-tiempo3} viene a romper esta tendencia. 
+Ahora bien, como dijimos antes 3-ROTACION es cara temporalmente. En las figuras \ref{fig:5-tiempo1} y \ref{fig:5-tiempo2} se ve claramente como este algoritmo está órdenes de magnitud por encima de los otros dos en cuanto a tiempo utilizado se refiere. Nótese que fue necesario recurrir a la escala logarítmica pues de lo contrario INTERCAMBIAR y REMPLAZAR hubieran resultado indistinguibles por esta diferencia de órdenes.  Notar que entre estas dos heurísticas no hay una diferencia tan significativa, aunque si nos guiamos por estas dos figuras pareciera que INTERCAMBIAR tiende a consumir un poco más de tiempo. 
 
-Esta aparente contradicción en la tendencia podemos atribuírsela parcialmente a no tener un mayor número de muestras; en general, en términos amortizados podríamos esperar que estén en el mismo orden. Inicialmente no hay una razón para pensar que una tenga que ser intrínsecamente más rápida que la otra en todos los casos. Mientras que por un lado INTERCAMBIAR solo depende de $n_1$, REMPLAZAR también lo hace de $n_2-n_1$, como vimos en la subsección de complejidad. Esto implica que el costo de las iteraciones será mayor para REMPLAZAR cuando dicha diferencia sea superior a $n_1$, y caso contrario cuando no lo sea. Aunque claro, también hay que tener en cuenta la cantidad de iteraciones que se realizan, lo que resulta poco predecible.  
+Vale decir que esto último se lo atribuímos principalmente a no tener un mayor número de muestras; en general, en términos amortizados podríamos esperar que estén en el mismo orden. Inicialmente no hay una razón para pensar que una tenga que ser intrínsecamente más rápida que la otra en todos los casos. Mientras que por un lado INTERCAMBIAR solo depende de $n_1$, REMPLAZAR también lo hace de $n_2-n_1$, como vimos en la subsección de complejidad. Esto implica que el costo de las iteraciones será mayor para REMPLAZAR cuando dicha diferencia sea superior a $n_1$, y caso contrario cuando no lo sea. Aunque claro, también hay que tener en cuenta la cantidad de iteraciones que se realizan, lo que resulta poco predecible.  
 
 \begin{figure}[H]
 \centering
-\begin{minipage}{0.49\textwidth}
+\begin{minipage}{0.8\textwidth}
   \centering
     \includegraphics[width=1\textwidth]{graficos/problema_5/tiempo0.pdf}
   \caption{}
   \label{fig:5-tiempo1}
 \end{minipage}%
-\hspace{0.01\textwidth}
-\begin{minipage}{0.49\textwidth}   
+
+\begin{minipage}{0.8\textwidth}   
   \centering
     \includegraphics[width=1\textwidth]{graficos/problema_5/tiempo2.pdf} 
   \caption{}
   \label{fig:5-tiempo2}
 \end{minipage}
-
-\begin{minipage}{0.49\textwidth}
-  \centering
-    \includegraphics[width=1\textwidth]{graficos/problema_5/tiempo4.pdf}
-  \caption{}
-  \label{fig:5-tiempo3}
-\end{minipage}%
 \end{figure}
 
 Finalmente veamos las últimas tres figuras, que son quizás las más relevantes pues nos permiten ver la relación calidad/tiempo. Sin demasiadas sorpresas, 3-ROTACION que había mostrado ser el mejor calidad tenía en términos relativos (aunque sin grandes diferencias en términos absolutos) pero también el marcadamente peor en cuanto a tiempos, da pobres resultados para esta estadística. Nuevamente tenemos resultados contradictorios entre las otras dos heurísticas, sin embargo vemos que son coherentes con los resultados obtenidos para los tiempos. 
@@ -255,27 +248,19 @@ En definitiva no parece haber un claro ganador entre estas dos alternativas. Aho
 
 \begin{figure}[H]
 \centering
-\begin{minipage}{0.49\textwidth}
+\begin{minipage}{0.8\textwidth}
   \centering
     \includegraphics[width=1\textwidth]{graficos/problema_5/cociente1-0.pdf}
   \caption{}
   \label{fig:5-cociente1}
 \end{minipage}%
-\hspace{0.01\textwidth}
-\begin{minipage}{0.49\textwidth}   
+
+\begin{minipage}{0.8\textwidth}   
   \centering
     \includegraphics[width=1\textwidth]{graficos/problema_5/cociente1-2.pdf} 
   \caption{}
   \label{fig:5-cociente2}
 \end{minipage}
-
-\begin{minipage}{0.49\textwidth}
-  \centering
-    \includegraphics[width=1\textwidth]{graficos/problema_5/cociente0-4.pdf}
-  \caption{}
-  \label{fig:5-cociente3}
-\end{minipage}%
-
 \end{figure}
 
 
