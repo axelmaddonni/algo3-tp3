@@ -31,7 +31,7 @@ Un aspecto importante de nuestro algoritmo goloso es que siempre mapea exactamen
   \label{algo:5-1}
     \Procedure{INT}{\texttt{Grafo} $G_1$, \texttt{set<int>} $vertices_1$, \texttt{Grafo} $G_2$, \texttt{set<int>} $vertices_2$}$\rightarrow$ \texttt{MCS}
       \State \texttt{MCS} $source \gets goloso(G_1, vertices_1, G_2, vertices_2)$
-      \Comment $O()$
+      \Comment $O(n_1^4n_2)$
       \State \texttt{bool} $mejore \gets true$
       \Comment $O(1)$
       \While{$mejore$}
@@ -78,6 +78,7 @@ $N(S) = \{S': S' = S \textbackslash \{(v_i, w_i)\} \cup \{(v_i, z_i)\}\}$.
   \label{algo:5-2}
     \Procedure{REMP}{\texttt{Grafo} $G_1$, \texttt{set<int>} $vertices_1$, \texttt{Grafo} $G_2$, \texttt{set<int>} $vertices_2$}$\rightarrow$ \texttt{MCS}
       \State \texttt{MCS} $source \gets goloso(G_1, vertices_1, G_2, vertices_2)$
+      \Comment $O(n_1^4n_2)$
       \State \texttt{bool} $mejore \gets true$
       \Comment $O(1)$
       \State \texttt{vector<int>} $vertices \gets set\_to\_vector(vertices_2)$
@@ -121,6 +122,7 @@ Esta vecindad sigue un principio muy parecido al de INTERCAMBIAR. La idea surge 
   \label{algo:5-3}
     \Procedure{3-ROT}{\texttt{Grafo} $G_1$, \texttt{set<int>} $vertices_1$, \texttt{Grafo} $G_2$, \texttt{set<int>} $vertices_2$}$\rightarrow$ \texttt{MCS}
       \State \texttt{MCS} $source \gets goloso(G_1, vertices_1, G_2, vertices_2)$
+      \Comment $O(n_1^4n_2)$
       \State \texttt{bool} $mejore \gets true$
       \Comment $O(1)$
       \While{$mejore$}
@@ -157,19 +159,10 @@ Esta vecindad sigue un principio muy parecido al de INTERCAMBIAR. La idea surge 
 \end{algorithm}
 
 \subsection{Complejidades}
-En este apartado se mantine la convención de que $n_1 = min\{n_1, n_2\}$.
+En este apartado se mantiene la convención de que $n_1 = min\{n_1, n_2\}$.
 Para calcular las complejidades en peor caso de las búsquedas tengamos en cuenta lo siguiente: en todos los casos se tiene por un lado el costo para recorrer completamente cada vecindad, y por el otro la cantidad de veces que vamos a tener que efectivamente vamos a tener que recorrer una vecindad. Esto último es debido a que, en peor caso, por cada mejora que logramos tenemos que recorrer una vecindad nueva. Calcular el costo de realizar cada recorrido es tan simple como ver los algoritmos de la subsección anterior y usar álgebra de órdenes. En cambio encontrar una cota no demasiado holgada para la cantidad de veces que se mejora no resulta trivial.
 
-Por tales motivos primero desdoblaremos el cálculo del costo de cada iteración del de la cantidad de iteraciones.
-
-\subsubsection{INTERCAMBIAR}
-$O(n_1^4)$
-
-\subsubsection{REMPLAZAR}
-$O((n_2-n_1) n_1^3)$
-
-\subsubsection{3-ROTACION}
-$O(n_1^5)$
+Por tales motivos desdoblaremos el cálculo del costo de cada iteración del de la cantidad de iteraciones.
 
 \subsubsection{Cantidad de iteraciones}
 Para hallar una cota en peor caso para la cantidad de iteraciones (que vale para las tres vecindades) pensemos en la siguiente situación: la solución \emph{source} solo tiene una arista; además con cada iteración siempre mejoramos en solo una arista. Es claro que este es el peor escenario posible. También es relativamente fácil darse cuenta que la cantidad de iteraciones es $O(m_1)$, pues una solución máxima no puede tener más de $m_1$ aristas.
@@ -184,7 +177,104 @@ Es importante destacar que podría pasar que $G_2$ tenga menos aristas pero que 
 
 En definitiva esta cota podría no ser alcanzable (nosotros no encontramos una instancia que la realice), pero seguro acota la cantidad de iteraciones y no pudimos encontrar una cota mejor en peor caso.
 
+\subsubsection{Costo de las iteraciones}
+Debido a lo simple del pseudocódigo y de las complejidades que en él aparecen, es fácil llegar a que (álgebra de órdenes mediante) el costo de cada iteración de la búsqueda es 
+
+\begin{itemize}
+\item Para INTERCAMBIAR: $O(n_1^4)$
+\item Para REMPLAZAR: $O((n_2-n_1) n_1^3)$
+\item Para 3-ROTACION: $O(n_1^5)$
+\end{itemize}
+
 \subsection{Análisis de performance y calidad}
+En esta sección analizaremos las diferencias de calidad y tiempos de las tres búsquedas locales planteadas, tratando de determinar cuál es la que realiza el mejor \emph{trade-off}.
+
+Es importante destacar que en lugar de tomar la cantidad de aristas o el tiempo en el que incurre cada búsqueda para cada instancia corrida, consideramos la diferencia de estos valores respecto de los mismos para la heurística golosa. Esto es razonable pues todas las búsquedas parten de calcular una solución golosa, por lo que probablemente resultaría más confuso para la comparación si se graficaran los datos en bruto.
+
+También vale mencionar que durante la experimentación se encontraron distintos errores o simplemente aspectos mejorables. Esto conllevó a la necesidad de realizar varias iteraciones de la experimentación, lo que resultó (combinado con el hecho de que cada experimento insumió gran cantidad de horas) en que para la experimentación aquí presentada no se pudiera tomar un número de muestras tan alto como se hubiera deseado inicialmente. Esto puede devenir en algunos resultados confusos. En tales casos se tratará de señalar la situación.
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.49\textwidth}
+  \centering
+    \includegraphics[width=1\textwidth]{graficos/problema_5/calidad0.pdf}
+  \caption{}
+  \label{fig:calidad1}
+\end{minipage}%
+\hspace{0.01\textwidth}
+\begin{minipage}{0.49\textwidth}   
+  \centering
+    \includegraphics[width=1\textwidth]{graficos/problema_5/calidad2.pdf} 
+  \caption{}
+  \label{fig:calidad2}
+\end{minipage}
+
+\begin{minipage}{0.49\textwidth}
+  \centering
+    \includegraphics[width=1\textwidth]{graficos/problema_5/calidad4.pdf}
+  \caption{}
+  \label{fig:calidad3}
+\end{minipage}%
+\end{figure}
+
+En lo gráficos de arriba puede verse una comparación de la calidad de los tres algoritmos, entendiendo a esta como la diferencia en la cantidad de aristas encontradas en promedio por cada uno. Lo primero que puede notarse observando las figuras \ref{fig:calidad1} y \ref{fig:calidad2} es la clara ventaja de 3-ROTACION sobre las otras heurísticas, tanto en el valor promedio como en los máximos alcanzados. Notar, sin embargo, que la razón por la que la calidad de este algoritmo no se grafica en la figura \ref{fig:calidad3} es que, como veremos a continuación, consume mucho más tiempo que sus competidores, por lo que muestrearlo para grafos de tamaño 250 y 300 resultaba ya muy costoso. Sin embargo, podemos ver que la ligera tendencia de superioridad de INTERCAMBIAR sobre REMPLAZAR, que se aprecia  en las primeras dos figuras, se mantiene (e incluso se acentúa) en la tercera. Como INTERCAMBIAR es un caso particular de 3-ROTACION está claro que entonces este último siempre debe seral menos tan bueno, lo que nos permite deducir que 3-ROTACION sigue siendo la mejor opción en calidad.
+
+Ahora bien, como dijimos antes 3-ROTACION es cara temporalmente. En las figuras \ref{fig:tiempo1} y \ref{fig:tiempo2} se ve claramente como este algoritmo está órdenes de magnitud por encima de los otros dos en cuanto a tiempo utilizado se refiere. Nótese que fue necesario recurrir a la escala logarítmica pues de lo contrario INTERCAMBIAR y REMPLAZAR hubieran resultado indistinguibles por esta diferencia de órdenes.  Notar que entre estas dos heurísticas no hay una diferencia tan significativa, aunque si nos guiamos por estas dos figuras pareciera que INTERCAMBIAR tiende a consumir un poco más de tiempo. No obstante, la figura \ref{fig:tiempo3} viene a romper esta tendencia. 
+
+Esta aparente contradicción en la tendencia podemos atribuírsela parcialmente a no tener un mayor número de muestras; en general, en términos amortizados podríamos esperar que estén en el mismo orden. Inicialmente no hay una razón para pensar que una tenga que ser más rápida que la otra en todos los casos. Mientras que por un lado INTERCAMBIAR solo depende de $n_1$, REMPLAZAR también lo hace de $n_2-n_1$, como vimos en la subsección de complejidad. Esto implica que el costo de las iteraciones será mayor para REMPLAZAR cuando dicha diferencia sea superior a $n_1$, y caso contrario cuando no lo sea. Aunque claro, también hay que tener en cuenta la cantidad de iteraciones que se realizan, lo que resulta poco predecible.  
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.49\textwidth}
+  \centering
+    \includegraphics[width=1\textwidth]{graficos/problema_5/tiempo0.pdf}
+  \caption{}
+  \label{fig:tiempo1}
+\end{minipage}%
+\hspace{0.01\textwidth}
+\begin{minipage}{0.49\textwidth}   
+  \centering
+    \includegraphics[width=1\textwidth]{graficos/problema_5/tiempo2.pdf} 
+  \caption{}
+  \label{fig:tiempo2}
+\end{minipage}
+
+\begin{minipage}{0.49\textwidth}
+  \centering
+    \includegraphics[width=1\textwidth]{graficos/problema_5/tiempo4.pdf}
+  \caption{}
+  \label{fig:tiempo3}
+\end{minipage}%
+\end{figure}
+
+Finalmente veamos las últimas tres figuras, que son quizás las más relevantes pues nos permiten ver la relación calidad/tiempo. Sin demasiadas sorpresas, 3-ROTACION que había mostrado ser el mejor calidad tenía en términos relativos (aunque sin grandes diferencias en términos absolutos) pero también el marcadamente peor en cuanto a tiempos, da pobres resultados para esta estadística. Nuevamente tenemos resultados contradictorios entre las otras dos heurísticas, sin embargo vemos que son coherentes con los resultados obtenidos para los tiempos. 
+
+En definitiva no parece haber un claro ganador entre estas dos alternativas. Ahora bien si aceptamos el hecho de que en general no podemos determinar que una de las dos siempre va a ser más rápida, estando bastante parejas en este apartado, sí pudimos ver que INTERCAMBIAR resultaba más robusta en cuanto a la cantidad de aristas encontradas, por lo que parece una decisión razonable quedarnos con esta heurística para el caso general. 
+
+\begin{figure}[H]
+\centering
+\begin{minipage}{0.49\textwidth}
+  \centering
+    \includegraphics[width=1\textwidth]{graficos/problema_5/cociente1-0.pdf}
+  \caption{}
+  \label{fig:cociente1}
+\end{minipage}%
+\hspace{0.01\textwidth}
+\begin{minipage}{0.49\textwidth}   
+  \centering
+    \includegraphics[width=1\textwidth]{graficos/problema_5/cociente1-2.pdf} 
+  \caption{}
+  \label{fig:cociente2}
+\end{minipage}
+
+\begin{minipage}{0.49\textwidth}
+  \centering
+    \includegraphics[width=1\textwidth]{graficos/problema_5/cociente0-4.pdf}
+  \caption{}
+  \label{fig:cociente3}
+\end{minipage}%
+
+\end{figure}
 
 
 

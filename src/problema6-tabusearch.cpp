@@ -2,6 +2,12 @@
 #include "goloso.h"
 #include <list>
 
+int lista_tabu_limite; //argv[1]
+int tipo_parada; //argv[2]
+Isomorfismo solu_golosa;
+clock_t g_begin;
+clock_t g_end;
+
 std::size_t computar_hash(Isomorfismo iso) {
   // http://stackoverflow.com/questions/20511347/a-good-hash-function-for-a-vector
   std::size_t seed = iso.size();
@@ -28,8 +34,11 @@ bool busqueda_lineal(
 MCS tabu_search(Grafo &g1, std::set<int> &vertices1,
                 Grafo &g2, std::set<int> &vertices2) {
 
-  MCS source = goloso(g1, vertices1, g2, vertices2);  
-  int lista_tabu_limite = 1000;
+  g_begin = clock();
+  MCS source = goloso(g1, vertices1, g2, vertices2); 
+  g_end = clock();
+  solu_golosa = source.isomorfismo; /***Sacar**/ 
+  //int lista_tabu_limite = 1000;
   std::list<std::pair<std::size_t, int>> lista_tabu;
 
   int iteraciones_sin_mejorar = 0;
@@ -118,6 +127,8 @@ MCS tabu_search(Grafo &g1, std::set<int> &vertices1,
 }
 int main(int argc, const char* argv[]) {
   Grafo g1, g2;
+  lista_tabu_limite = atoi(argv[1]);
+  tipo_parada = atoi(argv[2]);
   leer_entrada(g1, g2);
 
   std::set<int> vertices1, vertices2;
@@ -130,17 +141,31 @@ int main(int argc, const char* argv[]) {
   
   MCS solucion;
   if (g1.n < g2.n) {
+    clock_t begin = clock();
     solucion = tabu_search(g1, vertices1, g2, vertices2);
-    imprimir_solucionH(
-        false, // inverso
-        hallar_aristas_isomorfismo(g1, g2, solucion.isomorfismo),
-        solucion);
+    std::vector<std::pair<int, int>> aristas = hallar_aristas_isomorfismo(g1, g2, solucion.isomorfismo); 
+    clock_t end = clock();
+    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC; 
+    double g_elapsed_secs = double(g_end - g_begin) / CLOCKS_PER_SEC;
+    
+    std::vector<std::pair<int, int>> aristas_goloso = hallar_aristas_isomorfismo(g1, g2, solu_golosa); 
+    int dif = aristas.size() - aristas_goloso.size();  
+    cout << dif << endl;
+    cout << elapsed_secs - g_elapsed_secs << endl;
+    //imprimir_solucionH(false, aristas, solucion);
   } else {
+    clock_t begin = clock();
     solucion = tabu_search(g2, vertices2, g1, vertices1);
-    imprimir_solucionH(
-        true, // inverso
-        hallar_aristas_isomorfismo(g2, g1, solucion.isomorfismo),
-        solucion);
+    std::vector<std::pair<int, int>> aristas = hallar_aristas_isomorfismo(g2, g1, solucion.isomorfismo);
+    clock_t end = clock();
+    double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;   
+    double g_elapsed_secs = double(g_end - g_begin) / CLOCKS_PER_SEC; 
+    
+    std::vector<std::pair<int, int>> aristas_goloso = hallar_aristas_isomorfismo(g2, g1, solu_golosa);   
+    int dif = aristas.size() - aristas_goloso.size();
+    cout << dif << endl;
+    cout << elapsed_secs - g_elapsed_secs << endl;
+    //imprimir_solucionH(true, aristas, solucion);
   }
 
   return 0;
