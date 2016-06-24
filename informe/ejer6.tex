@@ -2,11 +2,11 @@
 \subsection{Explicación detallada del algoritmo}
 
 En la sección anterior analizamos varios algoritmos de búsqueda local.
-La búsqueda local es una heuristica para algoritmos aproximados.
+La búsqueda local es una heurística para algoritmos aproximados.
 Sin embargo, las heurísticas de búsqueda local pueden verse como un algoritmo de \emph{gradient descent}.
 Estos algoritmos tienen el problema de los mínimos locales: cuando encuentran un mínimo local se quedan trabados y no pueden mejorar esa solución no óptima. 
 
-Por esa razón surgen las metaheuristicas.
+Por esa razón surgen las metaheurísticas.
 Una metaheurística es un método heurístico para resolver un  problema computacional general.
 Una meteheurística usa los parámetros dados por el usuario sobre unos procedimientos genéricos y abstractos. 
 Normalmente, estos procedimientos son heurísticos.
@@ -21,7 +21,7 @@ Nuestra lista tabú en nuestro caso debería contener soluciones posibles, es de
 Nuestra función de aspiración, es decir, nuestro método para elegir el isomorfismo inicial de la siguiente iteración hace lo obvio si hay alguna solución no tabú: elige la mejor.
 Sin embargo, si todas las soluciones son tabú, elegiremos la mejor solución tabú en cuestión.
 
-No creemos que fuera adecuado elegir ningun \emph{movimiento prohibido}, como vimos en la teórica (la definición de movimiento prohibido no existe en la definición original de la metaheuristica tabu search, si no que es una adición posterior), dado que no parecía razonable prohibir ningún movimiento ni ninguna solución particular (más allá de la tabú).
+No creemos que fuera adecuado elegir ningún \emph{movimiento prohibido}, como vimos en la teórica (la definición de movimiento prohibido no existe en la definición original de la metaheuristica tabu search, si no que es una adición posterior), dado que no parecía razonable prohibir ningún movimiento ni ninguna solución particular (más allá de la tabú).
 Esto se debe principalmente a que no hay características que hagan que, inmediatamente, podamos descartar una solución y declararla inviable.
 
 Sin más que explicar, veamos nuestra implementación.
@@ -90,7 +90,7 @@ El tamaño más pequeño funcionará muy rápido, dado que la búsqueda es muy e
 El tamaño más grande nos proveerá de los mejores resultados (en promedio) pero la búsqueda en la lista será terriblemente lenta, por lo cual no valdrá tanto la pena.
 El tamaño intermedio será, según nuestra creencia, un balance entre velocidad y calidad de los resultados.
 
-En cuanto a los criterios de parada, hay varios de entre los cuales elegir, pero todos se reducen a los mismos dos criterios de parada. Analicemoslos.
+En cuanto a los criterios de parada, hay varios de entre los cuales elegir, pero todos se reducen a los mismos dos criterios de parada. Analic\'emoslos.
 
 \begin{enumerate}
   \item Primero, podemos setear una cantidad de iteraciones global $k$, y simplemente parar luego de que la cantidad de iteraciones supera $k$. Este es el criterio más simple y esperamos que funcione peor que el siguiente.

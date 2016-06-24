@@ -4,7 +4,7 @@ El problema del sugrafo común máximo (con respecto a aristas) es un problema p
 
 Por esa razón, el algoritmo que lo resuelve de manera exacta debe ser de la clase de algoritmos que exploran todo el espacio de soluciones y se quedan con la mejor. De entre esos algoritmos, elegiremos un algoritmo de backtracking, dado que proponiendo buenas podas, se pueden mejorar los tiempos de ejecución del algoritmo, evitando mirar el espacio de soluciones en su enteridad.
 
-Nuestras soluciones, es decir, nuestos isomorfismos, van a estar representados como un vector de pares. Cada par $(v_{1i}, v_{2i})$ es un par de vértices que cumplen que $v_{1i} \in V(G_1)$ y $v_{2i} \in V(G_2)$ y nuestro isomorfismo los mapea. 
+Nuestras soluciones, es decir, nuestros isomorfismos, van a estar representados como un vector de pares. Cada par $(v_{1i}, v_{2i})$ es un par de vértices que cumplen que $v_{1i} \in V(G_1)$ y $v_{2i} \in V(G_2)$ y nuestro isomorfismo los mapea. 
 
 Por ejemplo, si nuestro isomorfismo es $f : V(G_1) \to V(G_2)$ tal que
 
@@ -17,7 +17,7 @@ f(6) = f(0) \\
 \end{matrix}
 $
 
-Lo vamos a almacenar de la siguiente manera: ${(0,1), (1,2), (3,5), (6,0)}$. Nótese que no importa que el ``isomorfismo'' sea parcial, dado que en realidad estamos describiendo subrafos isomorfos.
+Lo vamos a almacenar de la siguiente manera: ${(0,1), (1,2), (3,5), (6,0)}$. Nótese que no importa que el ``isomorfismo'' sea parcial, dado que en realidad estamos describiendo subgrafos isomorfos.
 
 Por lo tanto, nuestro algoritmo de backtracking se va a basar en probar todas las posibles combinaciones de listas de pares, y buscar cual representa el isomorfismo con la mayor cantidad de aristas. 
 
@@ -30,9 +30,9 @@ Otra poda que realizamos es que, si encontramos la solución máxima posible te�
 
 Una última poda que realizamos es considerar solamente aquellos vectores cuyo largo sea exactamente el del mínimo de los vértices de $G_1$ y $G_2$. Esto se debe a que, si un vector es más chico, vamos a poder considerar a un vector extendido, cuyo isomorfismo potencialmente tendrá más aristas.
 
-El algoritmo utiliza una variable global llamada $solucion$, que tiene 2 campos, $aristas$ e $isomorfismo$. En esta variable global irá guardando la mejor solución encontrada hasta el momendo. $solucion.aristas$ debe inicializarse en 0.
+El algoritmo utiliza una variable global llamada $solucion$, que tiene 2 campos, $aristas$ e $isomorfismo$. En esta variable global irá guardando la mejor solución encontrada hasta el momento. $solucion.aristas$ debe inicializarse en 0.
 
-Sin más que analizar, pasemos a ver el pseudocódigo del algoritmo. Vale la pena aclarar que asumimos como preconodición que $G_1$ tiene menos nodos que $G_2$ (en tal caso de que asi no fuere, el llamador debe ocuparse de dar vuelta los parámetros).
+Sin más que analizar, pasemos a ver el pseudocódigo del algoritmo. Vale la pena aclarar que asumimos como preconodición que $G_1$ tiene menos nodos que $G_2$ (en tal caso de que así no fuere, el llamador debe ocuparse de dar vuelta los parámetros).
 
 
 \begin{algorithm}[H]
@@ -120,7 +120,7 @@ El algoritmo debe ser llamado de la siguiente manera:
 
 \[bt(grafo1, \{1,...,|V(grafo1)|\}, grafo2, \{1,...,|V(grafo2)|\}, \{ \})\].
 
-Dado que inicialmente tódos los vértices están sin ser utilizados, y el isomorfismo es el isomorfismo vacío.
+Dado que inicialmente todos los vértices están sin ser utilizados, y el isomorfismo es el isomorfismo vacío.
 
 \subsubsection{Complejidad del algoritmo}
 

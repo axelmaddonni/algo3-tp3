@@ -38,7 +38,7 @@ La solución que buscamos, entonces, es: $f(G, K, min \{|G|, |K|\})$.
 
 \begin{itemize}
 \item \textbf{Caso trivial.} El MCS de un grafo trivial con un grafo completo es ($\{v\}$, $\{\}$), donde $v$ es el único nodo de $G$.
-\item \textbf{Caso $G$ es unión de cografos $G1, G2$.} Por transitividad, MCS($Gi, K, j$) $\in G$ pues es subgrafo de $Gi$ y $Gi$ es subgrafo de $G$ $\forall i \in (1,2)$. Además, toda arista y nodo del $MCS(G,K,j)$ de $j$ vertices pertenece bien a $G1$ o a $G2$. Por lo que podemos calcularlo quedándonos con el MCS de máxima cantidad de aristas resultante entre todas las combinaciones posibles de usar $x$ cantidad de nodos de $G1$ y $j-x$ nodos de $G2$ ($x \in [0..j]$). Para ver cuál es el mejor MCS resultante es necesario calcular el x que maximice la cantidad de aristas de la unión entre los $MCS(G1,K,x)$  y $MCS(G2,K,j-x)$ (para todo $x$ válido), ya que vale el principio de optimalidad. Si utilizáramos otro subgrafo de $G1$ o $G2$ que no fuera MCS del mismo, entonces el MCS resultante para $G$ no sería óptimo, pues podríamos intercambiarlo por el óptimo y obtener un MCS mejor para $G$.
+\item \textbf{Caso $G$ es unión de cografos $G1, G2$.} Por transitividad, MCS($Gi, K, j$) $\in G$ pues es subgrafo de $Gi$ y $Gi$ es subgrafo de $G$ $\forall i \in (1,2)$. Además, toda arista y nodo del $MCS(G,K,j)$ de $j$ v\'ertices pertenece bien a $G1$ o a $G2$. Por lo que podemos calcularlo quedándonos con el MCS de máxima cantidad de aristas resultante entre todas las combinaciones posibles de usar $x$ cantidad de nodos de $G1$ y $j-x$ nodos de $G2$ ($x \in [0..j]$). Para ver cuál es el mejor MCS resultante es necesario calcular el x que maximice la cantidad de aristas de la unión entre los $MCS(G1,K,x)$  y $MCS(G2,K,j-x)$ (para todo $x$ válido), ya que vale el principio de optimalidad. Si utilizáramos otro subgrafo de $G1$ o $G2$ que no fuera MCS del mismo, entonces el MCS resultante para $G$ no sería óptimo, pues podríamos intercambiarlo por el óptimo y obtener un MCS mejor para $G$.
 \item \textbf{Caso $G$ es join de cografos $G1, G2$.} Para este caso, debemos considerar las aristas que se agregan al hacer el join. Al igual que en el caso anterior, todo nodo del $MCS(G,K,j)$ de $j$ vertices pertenece bien a $G1$ o a $G2$. Por lo que podemos calcularlo quedándonos con el MCS de máxima cantidad de aristas resultante entre todas las combinaciones posibles de usar $x$ cantidad de nodos de $G1$ y $j-x$ nodos de $G2$ ($x \in [0..j]$). Sin embargo, no podemos quedarnos con la unión de los MCS de los subgrafos tal que la suma de las aristas es la máxima como en el caso anterior, ya que hay aristas que no estamos considerando. Éstas aristas son las aristas que se agregan cuando se realiza el join entre dos grafos, y son todas aquellas que unen cada nodo de una componente del join a todos los nodos de la otra. Por lo que, para calcular la mejor combinación posible de nodos entre $G1$ y $G2$ debemos sumar la cantidad de aristas entre el $MCS(G1,K,x)$  y $MCS(G2,K,j-x)$. Entonces, buscamos la combinación que maximice lo siguiente:
 \[ aristas(MCS(G1,K,x)) + aristas(MCS(G2,K,j-x)) + x*(j-x) \forall x \in [0..j] \]
 donde $x*(j-x)$ corresponde a la cantidad de aristas con un extremo en $G1$ y otro en $G2$. Al igual que en el caso anterior, si utilizáramos otro subgrafo de $G1$ o $G2$ que no fuera MCS del mismo, entonces el MCS resultante para $G$ no sería óptimo, pues podríamos intercambiarlo por el óptimo y obtener un MCS mejor para $G$.
@@ -96,7 +96,14 @@ El algoritmo se basa primero en verificar si el cografo de entrada es conexo. En
 
 Para verificar si el grafo es conexo, se calculan las componentes conexas llamando a \emph{obtenerComponentesCografo}. Esta función está basada en BFS, pero a diferencia de éste, si el grafo tiene más de dos componentes conexas: $C_1, C_2, ..., C_k$, sólo devuelve dos componentes, $C'_1 = C_1$ y $C'_2 = C_2 \cup C_3 \cup ... \cup C_k$. De esta manera se logra que el CographTree generado finalmente sea binario. El segundo parámetro de la función es un booleano que se usa para indicar si lo que se buscan son las dos componentes de un cografo Join. (es decir se buscan $G1, G2$ tal que $G = G1 \lor G2$). Para esto, se introduce una modificación al BFS, tal que en lugar de recorrer los adyacentes a cada nodo, se recorren los nodos no adyacentes de los mismos, para calcular los nodos correspondientes a uno de los grafos del join. A continuación una demostración de que el algoritmo con dicha modificación calcula efectivamente las dos componentes de un join.
 
-\emph{\textbf{dem.}} Dado $G, G1, G2$ grafos, tal que $G = G1\ \lor\ G2$. Es decir, $\forall v \in G1, u \in G2, \exists (u, v) \in G$. Comenzando con un nodo aleatorio $x$, marco todos los nodos no adyacentes. Spge, supongo $x \in G1$. Estos nodos se encuentran necesariamente en G1, ya que $x$ es adyacente a todos los nodos de G2. Luego, marco los nodos no adyacentes a dichos nodos, que también, por la misma razón, pertenecen a G1. De esta manera, iterativamente, marcamos todos los nodos pertenecientes a G1. El resto de los nodos que quedó sin marcar, pertenece a la otra componente del join.$\qed$
+\emph{\textbf{dem.}} Dado $G, G_1, G_2$ grafos, tal que $G = G_1\ \lor\ G_2$.
+Es decir, $\forall v \in G_1, u \in G_2, \exists (u, v) \in G$.
+Comenzando con un nodo aleatorio $x$, marco todos los nodos no adyacentes.
+Sin p\'erdida de generalidad, supongo $x \in G_1$.
+Estos nodos se encuentran necesariamente en $G_1$, ya que $x$ es adyacente a todos los nodos de $G_2$.
+Luego, marco los nodos no adyacentes a dichos nodos, que también, por la misma razón, pertenecen a $G_1$.
+De esta manera, iterativamente, marcamos todos los nodos pertenecientes a $G_1$.
+El resto de los nodos que quedó sin marcar, pertenece a la otra componente del join.$\qed$
 
 Una vez determinadas las dos componentes del cografo (sea unión o join), se aplica recursivamente para construir los cografos correspondientes a los subgrafos inducidos por los nodos de dichas componentes y continuar armando el árbol de cografos hasta completar las $n$ hojas con grafos triviales.
 
@@ -209,7 +216,7 @@ Para experimentar, utilizamos el algoritmo de generación de cografos al azar qu
 	\label{fig:problema3-tiempos0}
 \end{figure}
 
-Con este experimento confirmamos lo que esperabamos, dado que se ve que el cociente entre tiempo y tamaño de entrada está acotado por una constante, que es lo que queremos que pase, como dijimos en la introducción.
+Con este experimento confirmamos lo que esperábamos, dado que se ve que el cociente entre tiempo y tamaño de entrada está acotado por una constante, que es lo que queremos que pase, como dijimos en la introducción.
 
 Además, podemos comprobar que si fijamos $n$, todo anda como debería, es decir, la complejidad es lineal en $m$.
 
@@ -220,7 +227,7 @@ Además, podemos comprobar que si fijamos $n$, todo anda como debería, es decir
 	\label{fig:problema3-tiempos1}
 \end{figure}
 
-Por último, por completitud, es importante decir que es muy díficil, de hecho imposible, hacer el experimento en el que se fija $m$ y se varia $n$, porque nada nos garantiza  que existan suficientes cografos con cantidad de aristas $m$ de distinto $n$ como para hacer un experimento significativo, y además no es claro como generarlos (es decir, dado un $m$ como encontrar todos o varios cografos de distintos $n$).
+Por último, por completitud, es importante decir que es muy difícil, de hecho imposible, hacer el experimento en el que se fija $m$ y se varia $n$, porque nada nos garantiza  que existan suficientes cografos con cantidad de aristas $m$ de distinto $n$ como para hacer un experimento significativo, y además no es claro como generarlos (es decir, dado un $m$ como encontrar todos o varios cografos de distintos $n$).
 
 
 \subsection{Generación y testing de casos random}
