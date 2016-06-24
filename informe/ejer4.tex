@@ -93,7 +93,7 @@ El primer algoritmo tiene complejidad $O(n_2^2 + n_1^2)$ lo cual es acotable sup
 
 En la segunda heuristica la complejidad es precisamente $O(n_1^4 n_2)$. Esto resulta de los 3 ciclos anidados que hay mas una operación de costo cuadratico respecto de $n_1$. Si sumamos todo lo que se detalló en el pseudocódigo se puede ver que queda $O(n_1 + n_2 + \log(n_1) + \log(n_2) + n_1^2.n_2 + n_1^2.n_2.n_1^2 + n_1.\log(n_1) + n_1.\log(n_2)) = O(n_1^4 n_2)$
 
-\subsection{Instancias no óptimas}
+\subsection{Grado de exactitud del algoritmo}
 
 La primer heurística tiene varios casos donde fallará rotundamente. Un ejemplo puede ser el caso en que $G_1$ es el grafo completo $G_n$ y $G_2$ la unión de $n$ grafos estrella $S_n$. En ese caso, por el funcionamiento de nuestro algoritmo, se mapeará a cada nodo del grafo completo con el centro de cada una de las $n$ estrellas, ya que los centros de las estrellas son los nodos de mayor grado, esto formará un isomorfismo sin aristas, ya que en $G_2$ todos los nodos escogidos son disconexos entre si. Esta solución será mucho peor que la óptima que se dá al tomar el centro de una estrella y $n-1$ nodos conexos a este y mapearlos a los del grafo completo, la solución óptima tiene $n-1$ aristas.
 
