@@ -382,26 +382,6 @@ def graficar_problema4_n2fijo():
     plt.show()
 
 
-def generar_m(n):
-    aristas = 0
-    for i in range(n-1):
-        if random.random() > 0.5:
-            aristas += (i+1)
-    return aristas
-
-
-
-def generar_chamuyo():
-    resultados = {}
-    for _ in range(40):
-        n = 200
-        m = generar_m(n)
-        tiempo = random.gauss(float(30.123 + m*n), 113423.4) * 8.543245
-        resultados[m] = [tiempo]
-    return resultados
-
-
-
 
 def graficar_problema3():
     resultados = defaultdict(list, {(156, 5669): [32678275.075517386], (827, 163255): [4841508194.175947], (381, 38989): [474475135.7704734], (460, 50978): [834235549.1455886],
