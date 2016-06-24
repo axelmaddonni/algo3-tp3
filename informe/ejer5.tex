@@ -1,9 +1,11 @@
 \subsection{Introducción}
-En la sección anterior implementamos y analizamos una heurística golosa para atacar el problema planteado. Si bien resulta bastante deseable desde el punto de vista de la complejidad temporal (polinomial), tiene el problema de que, como vimos, la solución que nos provee puede ser arbitrariamente mala y en el caso general no tenemos ningún tipo de garantía de que tan cerca puede estar de una solución verdaderamente óptima.
+En la sección anterior implementamos y analizamos una heurística golosa para atacar el problema planteado. Si bien resulta bastante deseable desde el punto de vista de la complejidad temporal (polinomial de grado razonable), tiene el problema de que, como vimos, la solución que nos provee puede ser arbitrariamente mala y en el caso general no tenemos ningún tipo de garantía de qué tan cerca puede estar de una solución verdaderamente óptima.
 
-Lo que quisiéramos entonces es poder refinar la solución que nos devuelve la heurística golosa para que se acerce más al máximo real. Para esto probaremos 3 algoritmos de búsqueda local. Dichos algoritmos se basan en la noción de ``vecindad'' de soluciones. Dada una solución fuente $S$, una vecindad de $S$, $N(S)$, es un subconjunto del conjunto de posibles soluciones (en nuestro caso un subconjunto del conjunto de subgrafos comunes) que a diferencia de este último tiene un cardinal lo suficientemente pequeño como para poder ser recorrido en tiempo polinomial. Entonces los algoritmos de búsqueda local se diferenciarán a partir de la vecindad escogida en cada caso.
+Lo que quisiéramos entonces es poder refinar la solución que nos devuelve la heurística golosa para que se acerce más al máximo real. Para esto probaremos 3 algoritmos de búsqueda local. Dichos algoritmos se basan en la noción de ``vecindad'' de soluciones. Dada una solución fuente, una vecindad de $S$, $N(S)$, es un subconjunto del conjunto de posibles soluciones (en nuestro caso un subconjunto del conjunto de subgrafos comunes) que a diferencia de este último tiene un cardinal lo suficientemente pequeño como para poder ser recorrido en tiempo polinomial. Entonces los algoritmos de búsqueda local se diferenciarán a partir de la vecindad escogida en cada caso.
 
-Es importante resaltar que los algoritmos de búsqueda local no dejan de ser algoritmos heurísticos cuya calidad dependerá tanto de la solución fuente utilizada como de la vecindad escogida.
+Es importante resaltar que los algoritmos de búsqueda local no dejan de ser algoritmos heurísticos cuya calidad dependerá tanto de la solución fuente utilizada como de la vecindad escogida. Los algoritmos solo nos garantizan que encontraremos el máximo de la vecindad (máximo local) que no necesariamente es el máximo global.
+
+Otra cosa importante que también será común a todas las búsquedas es que cuando encontremos un máximo en la vecindad, si es mejor que la solución \emph{source}, no nos conformaremos con esto sino que pasaremos a explorar la vecindad correspondiente a esta nueva solución. De forma que se iterará la búsqueda hasta que se llegue a una solución que sea máxima en su vecindad.
 
 En particular nosotros escogimos 3 vecindades para el problema, bajo los siguientes rótulos:
 \begin{itemize}
@@ -12,17 +14,21 @@ En particular nosotros escogimos 3 vecindades para el problema, bajo los siguien
 	\item 3-ROTACION 
 \end{itemize}
 
+En todos los casos la solución fuente inicial será la dada por el algoritmo goloso.
+
 \subsection{Explicación detallada de los algoritmos}
-En pos de la claridad separamos la explicación y el pseudocódigo de las tres vecindades.
+En pos de la claridad separamos la explicación y el pseudocódigo de las tres vecindades. 
+
+La notación usada será $n_1 = |V(G_1)|$, $n_2 = |V(G_2)|$, $m_1 = |E(G_1)|$ y $m_2 = |E(G_2)|$. Asumimos, por ser precondición para usar el algoritmo goloso y la heurística REMPLAZAR, que $n_1 \leq n_2$. 
 
 \subsubsection{INTERCAMBIAR}
-Un aspecto importante de nuestro algoritmo goloso es que siempre mapea exactamente todos los vértices del gráfico con menor número de vértices a la hora de devolver la solución. En esta primera vecindad lo que planteamos es considerar todos los \emph{swapeos} posibles para el mapeo de la solución \emph{source}. Formalmente, si $S = \{(v_0, w_{i_1}),\hdots , (v_n, w_{i_n})\}$ es el mapeo de la solución source, entonces la vecindad de tipo INTERCAMBIAR asociada a S es $N_I(S) = \{S' : S' = \{(v_0, w_{i_1}),\hdots , (v_p, w_{i_q}) , \hdots, (v_q, w_{i_p}), (v_n, w_{i_n})\}\}$.
+Un aspecto importante de nuestro algoritmo goloso es que siempre mapea exactamente todos los vértices del grafo con menor número de vértices a la hora de devolver la solución. En esta primera vecindad lo que planteamos es considerar todos los \emph{swapeos} posibles para el mapeo de la solución \emph{source}. Formalmente, si $S = \{(v_0, w_{i_1}),\hdots , (v_n, w_{i_n})\}$ es el mapeo de la solución \emph{source}, entonces la vecindad de tipo INTERCAMBIAR asociada a S es $N_I(S) = \{S' : S' = \{(v_0, w_{i_1}),\hdots , (v_p, w_{i_q}) , \hdots, (v_q, w_{i_p}), (v_n, w_{i_n})\}\}$.
 
 \begin{algorithm}[H]
   \small
   \begin{algorithmic}[1]
   \caption{Pseudocódigo de INTERCAMBIAR}
-  \label{algo:1-1}
+  \label{algo:5-1}
     \Procedure{INT}{\texttt{Grafo} $G_1$, \texttt{set<int>} $vertices_1$, \texttt{Grafo} $G_2$, \texttt{set<int>} $vertices_2$}$\rightarrow$ \texttt{MCS}
       \State \texttt{MCS} $source \gets goloso(G_1, vertices_1, G_2, vertices_2)$
       \Comment $O()$
@@ -56,12 +62,20 @@ Un aspecto importante de nuestro algoritmo goloso es que siempre mapea exactamen
 \end{algorithm}
 
 \subsubsection{REEMPLAZAR}
+Recordar que $n_1 \leq n_2$ por precondición. En particular, para esta vecindad solo nos interesarán los casos en que $n_1 < n_2$. Si ambos tamaños fueran iguales el algoritmo no modificará la solución golosa.
+
+Debido a esta condición extra que asumimos sobre el tamaño de los grafos, para cualquier mapeo que tengamos como solución (en particular, el dado por el algoritmo goloso) siempre hay vértices de $G_2$ que no se están mapeando.
+
+La motivación de esta vecindad entonces es ver qué sucede con la cantidad de aristas cuando en el mapeo de la solución fuente reemplazamos nodos de $G_2$ con otros que no habíamos usado originalmente.
+
+Formalmente, si $S = \{(v_0, w_{1}),\hdots , (v_n, w_{n})\}$ es el mapeo de la solución fuente y $R = \{z_1, \hdots, z_r\}$ son los vértices de $G_2$ que no se mapearon en $S$, entonces \\
+$N(S) = \{S': S' = S \textbackslash \{(v_i, w_i)\} \cup \{(v_i, z_i)\}\}$. 
 
 \begin{algorithm}[H]
   \small
   \begin{algorithmic}[1]
   \caption{Pseudocódigo de REMPLAZAR}
-  \label{algo:1-1}
+  \label{algo:5-2}
     \Procedure{REMP}{\texttt{Grafo} $G_1$, \texttt{set<int>} $vertices_1$, \texttt{Grafo} $G_2$, \texttt{set<int>} $vertices_2$}$\rightarrow$ \texttt{MCS}
       \State \texttt{MCS} $source \gets goloso(G_1, vertices_1, G_2, vertices_2)$
       \State \texttt{bool} $mejore \gets true$
@@ -98,12 +112,13 @@ Un aspecto importante de nuestro algoritmo goloso es que siempre mapea exactamen
 \end{algorithm}
 
 \subsubsection{3-ROTACION}
+Esta vecindad sigue un principio muy parecido al de INTERCAMBIAR. La idea surge por analogía de las búsquedas locales 2-opt y 3-opt vistas en la teórica. En INTERCAMBIAR solo considerábamos como vecindad las soluciones que estaban a un \emph{swap} de diferencia del mapeo fuente. En ese caso los \emph{swapeos} pueden considerarse como una rotación de solo dos elementos. En esta variación la vecindad estará compuesta por todas las soluciones que están a lo sumo a una rotación de 3 nodos de diferencia.
 
 \begin{algorithm}[H]
   \small
   \begin{algorithmic}[1]
   \caption{Pseudocódigo de 3-ROTACION}
-  \label{algo:1-1}
+  \label{algo:5-3}
     \Procedure{3-ROT}{\texttt{Grafo} $G_1$, \texttt{set<int>} $vertices_1$, \texttt{Grafo} $G_2$, \texttt{set<int>} $vertices_2$}$\rightarrow$ \texttt{MCS}
       \State \texttt{MCS} $source \gets goloso(G_1, vertices_1, G_2, vertices_2)$
       \State \texttt{bool} $mejore \gets true$
@@ -142,14 +157,32 @@ Un aspecto importante de nuestro algoritmo goloso es que siempre mapea exactamen
 \end{algorithm}
 
 \subsection{Complejidades}
+En este apartado se mantine la convención de que $n_1 = min\{n_1, n_2\}$.
+Para calcular las complejidades en peor caso de las búsquedas tengamos en cuenta lo siguiente: en todos los casos se tiene por un lado el costo para recorrer completamente cada vecindad, y por el otro la cantidad de veces que vamos a tener que efectivamente vamos a tener que recorrer una vecindad. Esto último es debido a que, en peor caso, por cada mejora que logramos tenemos que recorrer una vecindad nueva. Calcular el costo de realizar cada recorrido es tan simple como ver los algoritmos de la subsección anterior y usar álgebra de órdenes. En cambio encontrar una cota no demasiado holgada para la cantidad de veces que se mejora no resulta trivial.
+
+Por tales motivos primero desdoblaremos el cálculo del costo de cada iteración del de la cantidad de iteraciones.
+
 \subsubsection{INTERCAMBIAR}
-$O(min\{m_1, m_2\}n_1^4)$
+$O(n_1^4)$
 
 \subsubsection{REMPLAZAR}
-$O(min\{m_1, m_2\}(n_2-n_1) n_1^3)$
+$O((n_2-n_1) n_1^3)$
 
 \subsubsection{3-ROTACION}
-$O(min\{m_1, m_2\}n_1^5)$
+$O(n_1^5)$
+
+\subsubsection{Cantidad de iteraciones}
+Para hallar una cota en peor caso para la cantidad de iteraciones (que vale para las tres vecindades) pensemos en la siguiente situación: la solución \emph{source} solo tiene una arista; además con cada iteración siempre mejoramos en solo una arista. Es claro que este es el peor escenario posible. También es relativamente fácil darse cuenta que la cantidad de iteraciones es $O(m_1)$, pues una solución máxima no puede tener más de $m_1$ aristas.
+
+Es importante destacar que podría pasar que $G_2$ tenga menos aristas pero que las mismas usen más vértices de los que tiene $G_1$. Además si $m_2 < m_1$, $O(m_2) \subset O(m_1)$. Por eso está bien que sea $O(m_1)$ y no $O(min\{m_1, m_2\})$.
+
+% Ahora bien no cuesta mucho darse cuenta en la práctica que esta cota puede ser realmente grosera por más de una razón: 
+% \begin{itemize}
+% \item por un lado asumimos una solución realmente mala: si bien en la sección respectiva vimos un ejemplo dónde la heurística se porta así de mal, no es esperable que en general de resultados tan malos;
+% \item por otra parte asumimos que en cada iteración se mejora en exactamente un arista cuando la solución es $O(m_1)$. En general  
+% \end{itemize}
+
+En definitiva esta cota podría no ser alcanzable (nosotros no encontramos una instancia que la realice), pero seguro acota la cantidad de iteraciones y no pudimos encontrar una cota mejor en peor caso.
 
 \subsection{Análisis de performance y calidad}
 
