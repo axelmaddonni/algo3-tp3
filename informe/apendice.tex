@@ -20,7 +20,18 @@ Este fue el algoritmo que usamos para generar grafos al azar. A diferencia de tr
 
 Aunque el algoritmo es muy simple, nos parece importante mostrarlo y aclarar que los grafos con los que testeamos no necesariamente son conexos.
 
+\subsection{Generación de casos de test}
 
+Para la experimentación de las heurísticas y la metaheurística tabú search, debimos generar varios grafos al azar y guardarlos, debido a que necesitábamos comparar diferentes algoritmos sobre el mismo grafo para obtener resultados que quieran decir algo.
+
+
+De esta manera, generamos varios grafos al azar, de distintos tamaños y distintas cantidades de aristas. Estos pueden ser encontrados en el siguiente link: \url{https://www.dropbox.com/s/4zci8roqi3tit4l/casos_random.7z?dl=0}.
+
+Los casos generados tienen la siguiente pinta: para cada tamaño 50, 100, 150, 200, 250, 300, 350, 400, 450, 500 generamos varios pares de grafos, donde el grafo más grande tiene esa cantidad de nodos, mientras que el más pequeño tiene una cantidad de nodos al azar. La cantidad de aristas de ambos grafos es al azar. 
+
+Debido al poder de cómputo que requieren los casos más grandes, en los experimentos del final del trabajo sólo utilizamos aquellos de tamaño más pequeño. Sin embargo, por ejemplo en la experimentación de la heurística golosa,  utilizamos todos los grafos.
+
+En el archivo linkeado pueden encontrarse dos carpetas, una llamada ``casos\_ahora'' y la otra ``casos\_despues''. La primera se refiere a los tests de todos los ejercicios hasta el 6, mientras que la segunda se refiere al ejercicio de verificación y re-testeo, que es el 7. Es decir, la primera carpeta fue utilizada en todos los ejercicios hasta el 6 y la segunda fue utilizada en el 7.
 
 \newpage
 \subsection{Partes relevantes del código}
