@@ -43,8 +43,68 @@ def barplot_calidad1():
     plt.savefig('fig.pdf')
     plt.show()
 
+def casos01():
+    algoritmo = (
+            "Goloso",
+            "Busqueda Local 0",
+            "Busqueda Local 1",
+            "Busqueda Local 2",
+            "Tabu (iters sin mejorar)",
+            "Tabu (iters totales)",
+            "Exacto"
+            )
+
+    calidad = {
+            3  : (2,  2,  2,  2,  2,  2,  3),
+            13 : (12, 12, 12, 12, 42, 42, 78),
+            23 : (22, 22, 22, 22, 132, 132, 253),
+            33 : (32, 32, 32, 32, 272, 272, 528),
+            43 : (42, 42, 42, 42, 462, 462, 903),
+            53 : (52, 52, 52, 52, 702, 702, 1378),
+            63 : (62, 62, 62, 62, 992, 992, 1953),
+            73 : (72, 72, 72, 72, 1332, 1332, 2628),
+            83 : (82, 82, 82, 82, 1772, 1772, 3403),
+            93 : (92, 92, 92, 92, 2162, 2162, 4278)
+            }
+
+    ind = sorted(calidad.keys())
+    vals = [calidad[x] for x in ind]
+    print ind
+    print vals
+
+    fig, ax = plt.subplots()
+
+    r0=ax.bar(map(lambda x:x-3,ind),map(lambda x:x[0],vals),width=1,color='r')
+    r1=ax.bar(map(lambda x:x-2,ind),map(lambda x:x[1],vals),width=1,color='g')
+    r2=ax.bar(map(lambda x:x-1,ind),map(lambda x:x[2],vals),width=1,color='b')
+    r3=ax.bar(map(lambda x:x+0,ind),map(lambda x:x[3],vals),width=1,color='y')
+    r4=ax.bar(map(lambda x:x+1,ind),map(lambda x:x[4],vals),width=1,color='w')
+    r5=ax.bar(map(lambda x:x+2,ind),map(lambda x:x[5],vals),width=1,color='m')
+    r6=ax.bar(map(lambda x:x+3,ind),map(lambda x:x[6],vals),width=1,color='k')
+
+    ax.set_ylabel('Aristas')
+    ax.set_xlabel('Caso de entrada (K_n)')
+    ax.set_title('Comparacion algoritmos')
+    ax.set_xticks(ind)
+    ax.legend((
+        r0[0],
+        r1[0],
+        r2[0],
+        r3[0],
+        r4[0],
+        r5[0],
+        r6[0],
+        ),
+            algoritmo, loc=2)
+    plt.savefig('fig.pdf')
+    plt.show()
+
+
+
+
 def main():
-    barplot_calidad1()
+    casos01()
+#    barplot_calidad1()
 
 
 main()

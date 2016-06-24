@@ -56,8 +56,9 @@ def correr_programa(binario, input_string):
 
 def main(binario):
     resultados = []
-    for n in range(3, 100):
+    for n in range(3, 100, 10):
         solucion = correr_programa(binario, generar_string(n))
+        print n, solucion
         resultados.append((n * (n-1) / 2, solucion))
     print resultados
 
