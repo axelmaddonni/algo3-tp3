@@ -1,8 +1,10 @@
 \subsection{Explicación detallada del algoritmo}
 
-Como ya mencionamos en el ejercicio 2 este problema no parece poder ser resuelto en tiempo polinomial, para poder acercarnos a una solución en tiempos razonables sacrificaremos la seguridad de conseguir siempre la opción óptima a cambio de mejorar la complejidad temporal. Esto se hará a partir de la implementación de una heuristica golosa, un programa que a partir de ciertas suposiciones, no necesariamente validas siempre pero muchas veces útiles, nos permitirá tomar desiciones rapidamente. Será golosa porque tomará desiciones buscando mejorar su estado actual sin pensar en la solución optima final, o sea, sin pensar a largo plazo.
+Como ya mencionamos en el ejercicio 2 este problema no parece poder ser resuelto en tiempo polinomial, para poder acercarnos a una solución en tiempos razonables sacrificaremos la seguridad de conseguir siempre la opción óptima a cambio de mejorar la complejidad temporal. Esto se hará a partir de la implementación de una heuristica golosa, un programa que nos permitirá tomar desiciones rapidamente a partir de ciertas suposiciones o atajos no necesariamente validas siempre, pero muchas veces útiles. Será golosa porque tomará desiciones buscando mejorar su estado actual sin pensar en la solución optima final, o sea, sin pensar a largo plazo.
 
-Hicimos dos versiones distintas. La primer versión consiste en mapear los nodos de mayor grado entre si hasta agotar todos los del grafo mas chico. Esto puede funcionar en algunos grafos pero claramente no siempre será la mejor opción.
+Hicimos dos versiones distintas para este ejercicio. La primer versión consiste en dados los dos grafos, $G_1$ y $G_2$, mapear los nodos de mayor grado entre si hasta agotar todos los del grafo mas chico. Esto puede funcionar en algunos grafos pero claramente no siempre será la mejor opción. 
+
+A continuación se puede ver el pseudo-código de dicho programa.
 
 \begin{algorithm}[H]
   \begin{algorithmic}[1]
@@ -31,9 +33,9 @@ Hicimos dos versiones distintas. La primer versión consiste en mapear los nodos
 	\end{algorithmic}
 \end{algorithm}
 
-Como se puede observar en el pseudo-código, el programa inicia ordenando por grado los vértices con $ordenar_por_grado()$ ayudandose con las matrices de adyacencia de $g_1$ y $g_2$. Luego crea el isomorfismo escogiendo mapear el nodo de mayor grado de $g_1$ con el de $g_2$, luego el segundo y asi sucesivamente hasta que se agoten. Una vez hecho esto se calculan las aristas del isomorfismo con $contar_aristas_isomorfismo()$, verificando que aristas se comparten en ambos grafos. (Para mas detalles sobre las funciones nombradas recurrir al apéndice.)
+Como se puede observar, el programa inicia ordenando por grado los vértices con $ordenar\_por\_grado()$ ayudandose con las matrices de adyacencia de $G_1$ y $G_2$. Luego crea el isomorfismo escogiendo mapear el nodo de mayor grado de $G_1$ con el de $G_2$, luego el segundo y asi sucesivamente hasta que se agoten. Una vez hecho esto se calculan las aristas del isomorfismo con $contar\_aristas\_isomorfismo()$, verificando cuales son los ejes que se comparten en ambos grafos (Para mas detalles sobre las funciones nombradas recurrir al apéndice).
 
-La segunda heurística tiene una mayor complejidad temporal pero da soluciones de calidad superior, esto será expuesto en sección de experimentación. El algoritmo inicia haciendo un mapeo entre el nodo de mayor grado de $G_1$ y $G_2$ luego expande este isomorfismo buscando en cada iteración agregar el mapeo de nodos que maximice la cantidad de aristas (del isomorfismo). Si hay empates se queda con la primer opción.
+La segunda heurística tiene una mayor complejidad temporal pero da soluciones de calidad superior, esto será expuesto en la sección de experimentación. El algoritmo inicia haciendo un mapeo entre el nodo de mayor grado de $G_1$ y $G_2$ luego expande este isomorfismo buscando en cada iteración agregar el mapeo de nodos que maximice la cantidad de aristas (del isomorfismo). Si hay empates se queda con la primer opción.
 
 El pseudocódigo es el siguiente
 
@@ -87,16 +89,16 @@ El pseudocódigo es el siguiente
 
 \subsection{Complejidad temporal de peor caso}
 
-El primer algoritmo tiene complejidad $O(n_2^2 + n_1^2)$ lo cual es acotable superiormente por $O(n_2^2)$ ya que $n_2$ siempre es mayor que $n_1$, es la precondición del programa. 
+El primer algoritmo tiene complejidad $O(n_2^2 + n_1^2)$ lo cual es acotable superiormente por $O(n_2^2)$ ya que $n_2$ siempre es mayor que $n_1$ (Es una precondición del programa).
 
 En la segunda heuristica la complejidad es precisamente $O(n_1^4 n_2)$. Esto resulta de los 3 ciclos anidados que hay mas una operación de costo cuadratico respecto de $n_1$. Si sumamos todo lo que se detalló en el pseudocódigo se puede ver que queda $O(n_1 + n_2 + \log(n_1) + \log(n_2) + n_1^2.n_2 + n_1^2.n_2.n_1^2 + n_1.\log(n_1) + n_1.\log(n_2)) = O(n_1^4 n_2)$
 
 \subsection{Instancias no óptimas}
 
-La primer heurística tiene varios casos donde fallará rotundamente. Un ejemplo puede ser el caso en que $G_1$ es el grafo completo $G_n$ y $G_2$ la unión de $n$ grafos estrella $S_n$. En ese caso, por el funcionamiento de nuestro algoritmo, se mapeará a cada nodo del grafo completo con el centro de cada una de las $n$ estrellas, ya que los centros de las estrellas son los nodos de mayor grado, esto formará un isomorfismo sin aristas, ya que en $G_2$ todos los nodos escogidos son disconexos entre si. Esta solución será mucho peor que la óptima que se dá al tomar el centro de una estrella y $n-1$ nodos conexos a este y mapearlos a los del grafo completo, la solución óptima tiene $n$ aristas.
+La primer heurística tiene varios casos donde fallará rotundamente. Un ejemplo puede ser el caso en que $G_1$ es el grafo completo $G_n$ y $G_2$ la unión de $n$ grafos estrella $S_n$. En ese caso, por el funcionamiento de nuestro algoritmo, se mapeará a cada nodo del grafo completo con el centro de cada una de las $n$ estrellas, ya que los centros de las estrellas son los nodos de mayor grado, esto formará un isomorfismo sin aristas, ya que en $G_2$ todos los nodos escogidos son disconexos entre si. Esta solución será mucho peor que la óptima que se dá al tomar el centro de una estrella y $n-1$ nodos conexos a este y mapearlos a los del grafo completo, la solución óptima tiene $n-1$ aristas.
 
 
-Un ejemplo donde la segunda heuristica golosa puede ser tan mala como uno quiera es cuando en su entrada recibe al grafo completo $G_n$ y a un grafo que resulta de la unión de $G_n$ con $S_n$, el cual es ilustrado mas abajo. 
+Un ejemplo donde la segunda heuristica golosa puede ser tan mala como uno quiera es cuando en su entrada recibe al grafo completo $G_n$ y a un grafo que resulta de la unión de $G_n$ con $S_n$, el cual es ilustrado mas abajo. En rojo se observa a $G_1$ y en azul a $G_2$
 
 \begin{tikzpicture}[shorten >=1pt,auto,node distance=1.9cm,
                     semithick]
@@ -138,9 +140,9 @@ Un ejemplo donde la segunda heuristica golosa puede ser tan mala como uno quiera
 
 \end{tikzpicture}
 
-Si recordamos como funciona nuestra segunda heurística golosa, se puede ver que esta arrancará mapeando el centro de la estrella (el nodo de mayor grado) con algun nodo del grafo completo. Luego seguirá con un nodo que maximice la cantidad de aristas del isomorfismo, el primero que encontrará que cumpla esto será  el nodo 0, seguirá de esta manera mapeando los extremos de la estrella con los nodos del grafo completo. En vez de elegir la opción óptima, mapear el grafo completo con el grafo completo contenido en $G_1$.
+Si recordamos como funciona nuestra segunda heurística golosa, se puede ver que esta arrancará mapeando el centro de la estrella (el nodo de mayor grado) con algún nodo del grafo completo. Luego seguirá con un nodo que maximice la cantidad de aristas del isomorfismo, el primero que encontrará que cumpla esto será  el nodo 0, seguirá de esta manera mapeando los extremos de la estrella con los nodos del grafo completo en vez de elegir la opción óptima, mapear el grafo completo, $G_2$, con el grafo completo contenido en $G_1$.
 
-Para estos casos la salida de la heuristica, $H(n)$, siempre va a devolver un isomorfismo con $n$ aristas, ya que mapeara los nodos de la estrella con los del grafo completo. En vez de esto la solución óptima, $Opt(n)$, sería $G_n$, o sea tendría $\frac{n.(n-1)}{2}$ aristas, por lo cual este no es un algoritmo aproximado, para $n$ suficientemente grande no existe ningun número real positivo, $\rho$, que acote inferiormente a $\frac{H(n)}{Opt(n)} = \frac{n}{n.(n-1)/2} = \frac{2}{n-1}$.
+Para estos casos la salida de la heuristica, llamemosla $H(n)$, siempre va a devolver un isomorfismo con $n$ aristas, ya que mapeara los nodos de la estrella con los del grafo completo. En vez de esto la solución óptima, $Opt(n)$, sería $G_n$, o sea tendría $\frac{n.(n-1)}{2}$ aristas, por lo cual este no es un algoritmo $\rho$-aproximado, ya que para $n$ suficientemente grande no existe ningun número real positivo, $\rho$, que acote inferiormente a $\frac{H(n)}{Opt(n)} = \frac{n}{n.(n-1)/2} = \frac{2}{n-1}$.
 
 \subsection{Performance del algoritmo}
 \input{ejer4_exp.tex}
