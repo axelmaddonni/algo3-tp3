@@ -1,4 +1,4 @@
-all: informe
+all: clean informe
 
 informe: informe.tex
 	pdflatex informe.tex
