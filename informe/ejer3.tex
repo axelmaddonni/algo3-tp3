@@ -166,13 +166,17 @@ C (Leer entrada) + C (Generación de CographTree) + C (MCS) + C (Imprimir)
 
 \begin{itemize}
 \item \texttt{Leer entrada.} $ O (n + m) $ 
-\item \texttt{Generación de CographTree.} Para generar esta estructura recursiva, es necesario inicializar cada cografo del árbol. Para eso, para cada uno de ellos se ejecuta \texttt{obtenerComponentesCografo} al menos una vez para chequear si el grafo correspondiente es conexo usando BFS $O(n+m)$. Además, si el grafo es conexo se ejecuta con la modificación sobre el BFS, recorriendo los nodos no adyacentes en lugar de los adyacentes. Con esta modificación, la complejidad del algoritmo es $O(n^2)$. Por lo tanto la complejidad quedaría:
+\item \texttt{Generación de CographTree.} Para generar esta estructura recursiva, es necesario inicializar cada cografo del árbol. 
+Para eso, para cada uno de ellos se ejecuta \hfill \break
+\texttt{obtenerComponentesCografo} al menos una vez para chequear si el grafo correspondiente es conexo usando BFS $O(n+m)$.
+Además, si el grafo es conexo se ejecuta con la modificación sobre el BFS, recorriendo los nodos no adyacentes en lugar de los adyacentes. Con esta modificación, la complejidad del algoritmo es $O(n^2)$.
+Por lo tanto la complejidad quedaría:
 \begin{align*}
 \sum_{i=1}^{tam(CographTree)} O ( (n_i)^2 + m_i ) & = \\
-& = O ( h_{CographTree} * n^2 ) +  O ( h_{CographTree} * m ) \\
+& = O ( tam(CographTree) * n^2 ) +  O ( tam(CographTree) * m ) \\
 \intertext{ notar que la suma de los $n_i$ y los $m_i$ pertenecientes a cada nivel del CographTree es $O(n)$ y $O(m)$ respectivamente.}
 & = O ( n * n^2 ) +  O ( n * m ) \\
-\intertext{ acotamos $h_{CographTree}$ por $n$}
+\intertext{ acotamos $tam(CographTree)$ por $n$ pues el cotree tiene obviamente $n$ hojas (una por cada nodo) y como es binario completo, la cantidad de nodos es aproximadamente $2n$.}
 & = O ( n^3 + n*m )
 \end{align*}
 
@@ -181,7 +185,7 @@ donde $n_i$ y $m_i$ son los correspondientes al $i$-ésimo cografo del CographTr
 \item \texttt{MCS.} Por cada cografo del CographTree debemos chequear cuál es la mejor combinación de nodos, para eso debemos probar con $n_i$ posibles combinaciones. Cada solución parcial se resuelve una sola vez, ya que vamos guardando las soluciones en el vector \texttt{sol}. Por lo que la complejidad queda:
 \begin{align*}
 \sum_{i=1}^{tam(CographTree)} O (n_i) & = \\
-& = O ( h_{CographTree} * n ) \\
+& = O ( tam(CographTree) * n ) \\
 & = O ( n * n ) \\
 & = O ( n^2 ) \\
 \end{align*}
@@ -194,7 +198,30 @@ $O( n^3 + n*m + min( n, n_K) + min (m, m_K) )$
 
 \subsection{Performance del Algoritmo}
 
-INGRESE AQUI EXPERIMENTACION
+Confirmemos experimentalmente las complejidades enunciadas anteriormente. Como siempre, dejamos de lado la parte de entrada salida, dado que hace que la varianza sea muy alta, y no vale la pena en general medir esta parte porque no es lo central del algoritmo. Por lo tanto, esperaremos que lo que medimos tenga complejidad $O(n^3 + nm)$. 
+
+Para experimentar, utilizamos el algoritmo de generación de cografos al azar que analizaremos en la siguiente sección. Medimos los tiempos manualmente, y los graficamos como explicamos en la introducción. 
+
+\begin{figure}[H]
+ \centering
+	\includegraphics[width=0.8\textwidth]{graficos/problema_3/tiempos0.pdf}
+	\caption{}
+	\label{fig:problema3-tiempos0}
+\end{figure}
+
+Con este experimento confirmamos lo que esperabamos.
+
+Además, podemos comprobar que si fijamos $n$, todo anda como debería, es decir, la complejidad es lineal en $m$.
+
+\begin{figure}[H]
+ \centering
+	\includegraphics[width=0.8\textwidth]{graficos/problema_3/tiempos1.pdf}
+	\caption{}
+	\label{fig:problema3-tiempos1}
+\end{figure}
+
+Por último, por completitud, es importante decir que es muy díficil, de hecho imposible, hacer el experimento en el que se fija $m$ y se varia $n$, porque nada nos garantiza  que existan suficientes cografos con cantidad de aristas $m$ de distinto $n$ como para hacer un experimento significativo, y además no es claro como generarlos (es decir, dado un $m$ como encontrar todos o varios cografos de distintos $n$).
+
 
 \subsection{Generación y testing de casos random}
 
