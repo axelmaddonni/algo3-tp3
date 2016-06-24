@@ -210,7 +210,7 @@ CographTree::Solucion CographTree::mcs_Sol (int cantNodos, int tamGrafoCompleto)
 
 		} else if (cantNodos == 1) {
 			cantAristasSol = 0;
-			nodosSol.push_back(nodos[0]); // devuelvo cualquiera?
+			nodosSol.push_back(nodos[0]);
 
 		} else if (n <= tamGrafoCompleto && cantNodos == n) {
 			cantAristasSol = m;
@@ -405,7 +405,7 @@ void imprimirSolucion(Grafo_adjlist g) {
 	// Imprimo isomorfismo con G
 	for (unsigned int i = 0; i < nodosIds(g).size(); ++i) {
 		cout << nodosIds(g)[i];	
-		isomorfismo.insert(pair<int,int>(nodosIds(g)[i], i+1));
+		isomorfismo.insert(pair<int,int>(nodosIds(g)[i], i));
 		if ( i != nodosIds(g).size()-1 ) {
 			cout << " ";
 		} else {
@@ -414,9 +414,9 @@ void imprimirSolucion(Grafo_adjlist g) {
 	}
 
 	// Imprimo cualquier isomorfismo porque es un Grafo_adjlist completo
-	for (int i = 1; i <= g.n; ++i) {
+	for (int i = 0; i < g.n; ++i) {
 		cout << i;
-		if ( i != g.n ) {
+		if ( i != g.n - 1) {
 			cout << " ";
 		} else {
 			cout << std::endl;

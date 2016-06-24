@@ -96,15 +96,15 @@ int main(int argc, char const *argv[]) {
 
 		cin >> g.n >> g.m >> tamGrafoCompleto >> aristasGrafoCompleto ;
 
-		for (int i = 1; i <= g.n; i++) {
+		for (int i = 0; i < g.n; i++) {
 			g.adj_list.insert(pair<int,vector<int>>(i, vector<int>()));
 		}
 
 		for (int i = 0; i < g.m; i++) {
 			int u, v;
 			cin >> u >> v;
-			g.adj_list[u+1].push_back(v+1);
-			g.adj_list[v+1].push_back(u+1);
+			g.adj_list[u].push_back(v);
+			g.adj_list[v].push_back(u);
 		}
 
 		CographTree cografo(g); 
