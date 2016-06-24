@@ -30,7 +30,7 @@ Otra poda que realizamos es que, si encontramos la solución máxima posible te�
 
 Una última poda que realizamos es considerar solamente aquellos vectores cuyo largo sea exactamente el del mínimo de los vértices de $G_1$ y $G_2$. Esto se debe a que, si un vector es más chico, vamos a poder considerar a un vector extendido, cuyo isomorfismo potencialmente tendrá más aristas.
 
-El algoritmo utiliza una variable global llamada $solución$, que tiene 2 campos, $aristas$ e $isomorfismo$. En esta variable global irá guardando la mejor solución encontrada hasta el momendo. $solución.aristas$ debe inicializarse en 0.
+El algoritmo utiliza una variable global llamada $solucion$, que tiene 2 campos, $aristas$ e $isomorfismo$. En esta variable global irá guardando la mejor solución encontrada hasta el momendo. $solucion.aristas$ debe inicializarse en 0.
 
 Sin más que analizar, pasemos a ver el pseudocódigo del algoritmo. Vale la pena aclarar que asumimos como preconodición que $G_1$ tiene menos nodos que $G_2$ (en tal caso de que asi no fuere, el llamador debe ocuparse de dar vuelta los parámetros).
 
