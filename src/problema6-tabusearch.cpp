@@ -34,8 +34,8 @@ MCS tabu_search(Grafo &g1, std::set<int> &vertices1,
 
   int iteraciones_sin_mejorar = 0;
   int iteraciones_totales = 0;
-  while (iteraciones_sin_mejorar < 10000) {
-  // while (iteraciones_totales < 100000) {
+  while (iteraciones_sin_mejorar < 500) {
+  // while (iteraciones_totales < 2000) {
     //std::cerr << "source.aristas = " << source.aristas
     //          << " (" << iteraciones_sin_mejorar << ")" << std::endl;
     MCS mejor_tabu = {.isomorfismo = Isomorfismo(), .aristas = 0};
