@@ -98,7 +98,7 @@ En la segunda heuristica la complejidad es precisamente $O(n_1^4 n_2)$. Esto res
 La primer heurística tiene varios casos donde fallará rotundamente. Un ejemplo puede ser el caso en que $G_1$ es el grafo completo $G_n$ y $G_2$ la unión de $n$ grafos estrella $S_n$. En ese caso, por el funcionamiento de nuestro algoritmo, se mapeará a cada nodo del grafo completo con el centro de cada una de las $n$ estrellas, ya que los centros de las estrellas son los nodos de mayor grado, esto formará un isomorfismo sin aristas, ya que en $G_2$ todos los nodos escogidos son disconexos entre si. Esta solución será mucho peor que la óptima que se dá al tomar el centro de una estrella y $n-1$ nodos conexos a este y mapearlos a los del grafo completo, la solución óptima tiene $n-1$ aristas.
 
 
-Un ejemplo donde la segunda heuristica golosa puede ser tan mala como uno quiera es cuando en su entrada recibe al grafo completo $G_n$ y a un grafo que resulta de la unión de $G_n$ con $S_n$, el cual es ilustrado mas abajo. En rojo se observa a $G_1$ y en rojo a $G_2$
+Un ejemplo donde la segunda heuristica golosa puede ser tan mala como uno quiera es cuando en su entrada recibe al grafo completo $G_n$ y a un grafo que resulta de la unión de $G_n$ con $S_n$, el cual es ilustrado mas abajo. En rojo se observa a $G_1$ y en azul a $G_2$
 
 \begin{tikzpicture}[shorten >=1pt,auto,node distance=1.9cm,
                     semithick]
