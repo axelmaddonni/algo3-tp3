@@ -1,8 +1,8 @@
 \subsection{Explicación detallada del algoritmo}
 
-El problema del sugrafo común máximo (con respecto a aristas) es un problema perteneciente a la clase NP, por lo que hasta el momento no se conocen algoritmos que lo resuelvan de manera exacta en tiempo polimonial. 
+El problema del subgrafo común máximo (con respecto a aristas) es un problema perteneciente a la clase NP, por lo que hasta el momento no se conocen algoritmos que lo resuelvan de manera exacta en tiempo polinomial. 
 
-Por esa razón, el algoritmo que lo resuelve de manera exacta debe ser de la clase de algoritmos que exploran todo el espacio de soluciones y se quedan con la mejor. De entre esos algoritmos, elegiremos un algoritmo de backtracking, dado que proponiendo buenas podas, se pueden mejorar los tiempos de ejecución del algoritmo, evitando mirar el espacio de soluciones en su enteridad.
+Por esa razón, el algoritmo que lo resuelve de manera exacta debe ser de la clase de algoritmos que exploran todo el espacio de soluciones y se quedan con la mejor. De entre esos algoritmos, elegiremos un algoritmo de backtracking, dado que proponiendo buenas podas, se pueden mejorar los tiempos de ejecución del algoritmo, evitando mirar el espacio de soluciones en su totalidad.
 
 Nuestras soluciones, es decir, nuestros isomorfismos, van a estar representados como un vector de pares. Cada par $(v_{1i}, v_{2i})$ es un par de vértices que cumplen que $v_{1i} \in V(G_1)$ y $v_{2i} \in V(G_2)$ y nuestro isomorfismo los mapea. 
 
@@ -32,7 +32,7 @@ Una última poda que realizamos es considerar solamente aquellos vectores cuyo l
 
 El algoritmo utiliza una variable global llamada $solucion$, que tiene 2 campos, $aristas$ e $isomorfismo$. En esta variable global irá guardando la mejor solución encontrada hasta el momento. $solucion.aristas$ debe inicializarse en 0.
 
-Sin más que analizar, pasemos a ver el pseudocódigo del algoritmo. Vale la pena aclarar que asumimos como preconodición que $G_1$ tiene menos nodos que $G_2$ (en tal caso de que así no fuere, el llamador debe ocuparse de dar vuelta los parámetros).
+Sin más que analizar, pasemos a ver el pseudocódigo del algoritmo. Vale la pena aclarar que asumimos como precondición que $G_1$ tiene menos nodos que $G_2$ (en tal caso de que así no fuere, el llamador debe ocuparse de dar vuelta los parámetros).
 
 
 \begin{algorithm}[H]

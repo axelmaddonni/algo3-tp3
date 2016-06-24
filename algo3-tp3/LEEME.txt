@@ -1,0 +1,15 @@
+El informe es informe.pdf.
+
+El codigo esta en src/. Compila correctamente. Para
+compilarlo proveemos un Makefile.
+
+src/exp contiene:
+  *generador_de_casos.py: con el que generamos los experimentos
+  *tiempos.py: para graficar los tiempos en los puntos en que se lo pedía
+  *mediciones.py: usado en la experimentación de las heurísticas para 
+                  obtener la calidad y tiempos. Requiere modificar la
+                  salida de las heurísticas para que ande.
+  *graficar.py: usado para graficar los resultados obtenidos de mediciones.py.
+                En particular la configuración que se muestra se usó en el
+                ejercicio 7. Está muy harcodeado así que para cada ejercicio
+                había que retocarle muchas cosas. 

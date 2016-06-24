@@ -60,7 +60,7 @@ Sin embargo, pudimos observar algunas diferencias en los máximos y los mínimos
 Esto se debe a que el tamaño de los grafos no es lo suficientemente grande como para que dos algoritmos buenos hagan diferencia. Sin embargo, los grafos son lo suficientemente grandes como para asegurarnos que la diferencia entre las variantes no será demasiada en ningún caso (salvo casos patológicos).
 
 
-A continuación, analizaremos los tiempos de los algoritmos. Nuestra expectativa, es que el tiempo que tarda la variante 0, es decir, la que fija la cantidad de iteraciones máxima sin que se mejore la solucion, va a ser mejor dado que optimiza la cantidad de iteraciones "ociosas", sobre todo en grafos chicos, donde la búsqueda se estanca relativamente rápido.
+A continuación, analizaremos los tiempos de los algoritmos. Nuestra expectativa, es que el tiempo que tarda la variante 0, es decir, la que fija la cantidad de iteraciones máxima sin que se mejore la solución, va a ser mejor dado que optimiza la cantidad de iteraciones ``ociosas'', sobre todo en grafos chicos, donde la búsqueda se estanca relativamente rápido.
 
 Además, esperamos que las variantes que tienen una lista tabú más larga tardan más, debido a que usamos una lista enlazada (std::list) para representarla, por lo que la búsqueda dentro de ella tiene complejidad lineal.
 
@@ -86,7 +86,7 @@ Además, esperamos que las variantes que tienen una lista tabú más larga tarda
 	\label{fig:problema6-tiempo2}
 \end{figure}
 
-En los gráficos se observa que confirmamos nuestras teorias de una manera bastante sólida.
+En los gráficos se observa que confirmamos nuestras teorías de una manera bastante sólida.
 
 Esto nos permite concluir que, aunque la calidad de las variantes es realmente similar, el tiempo que tardan los algoritmos es distinto, lo que nos permite concluir que la relación costo calidad de los algoritmos sí es diferente..
 

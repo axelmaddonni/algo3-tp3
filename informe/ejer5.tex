@@ -22,7 +22,7 @@ En pos de la claridad separamos la explicación y el pseudocódigo de las tres v
 La notación usada será $n_1 = |V(G_1)|$, $n_2 = |V(G_2)|$, $m_1 = |E(G_1)|$ y $m_2 = |E(G_2)|$. Asumimos, por ser precondición para usar el algoritmo goloso y la heurística REMPLAZAR, que $n_1 \leq n_2$. 
 
 \subsubsection{INTERCAMBIAR}
-Un aspecto importante de nuestro algoritmo goloso es que siempre mapea exactamente todos los vértices del grafo con menor número de vértices a la hora de devolver la solución. En esta primera vecindad lo que planteamos es considerar todos los \emph{swapeos} posibles para el mapeo de la solución \emph{source}. Formalmente, si $S = \{(v_0, w_{i_1}),\hdots , (v_n, w_{i_n})\}$ es el mapeo de la solución \emph{source}, entonces la vecindad de tipo INTERCAMBIAR asociada a S es $N_I(S) = \{S' : S' = \{(v_0, w_{i_1}),\hdots , (v_p, w_{i_q}) , \hdots, (v_q, w_{i_p}), (v_n, w_{i_n})\}\}$.
+Un aspecto importante de nuestro algoritmo goloso es que siempre mapea exactamente todos los vértices del grafo con menor número de vértices a la hora de devolver la solución. En esta primera vecindad lo que planteamos es considerar todos los \emph{swapeos} posibles para el mapeo de la solución \emph{source}. Formalmente, si $S = \{(v_0, w_{i_1}),\hdots , (v_n, w_{i_n})\}$ es el mapeo de la solución \emph{source}, entonces la vecindad de tipo INTERCAMBIAR asociada a S es $N(S) = \{S' : S' = \{(v_0, w_{i_1}),\hdots , (v_p, w_{i_q}) , \hdots, (v_q, w_{i_p}), (v_n, w_{i_n})\}\}$.
 
 \begin{algorithm}[H]
   \small
@@ -52,13 +52,16 @@ Un aspecto importante de nuestro algoritmo goloso es que siempre mapea exactamen
               \Comment $O(1)$             
               \State $mejore \gets true$
               \Comment $O(1)$
+            \Else
+            \Comment No me muevo a soluciones igual o peores
+              \State $swap(source.isomorfismo[i].first, source.isomorfismo[j].first)$
+              \Comment $O(1)$
             \EndIf
           \EndFor
         \EndFor
       \EndWhile
     \EndProcedure
   \end{algorithmic}
-  Complejidad: $O(min{n_1, n_2})$
 \end{algorithm}
 
 \subsubsection{REEMPLAZAR}
@@ -102,6 +105,7 @@ $N(S) = \{S': S' = S \textbackslash \{(v_i, w_i)\} \cup \{(v_i, z_i)\}\}$.
               \State $mejore \gets true$
               \Comment $O(1)$
             \Else
+            \Comment No me muevo a soluciones igual o peores
               \State $swap(vertices[i], source.isomorfismo[j].second)$
               \Comment $O(1)$
             \EndIf
@@ -115,6 +119,8 @@ $N(S) = \{S': S' = S \textbackslash \{(v_i, w_i)\} \cup \{(v_i, z_i)\}\}$.
 \subsubsection{3-ROTACION}
 Esta vecindad sigue un principio muy parecido al de INTERCAMBIAR. La idea surge por analogía de las búsquedas locales 2-opt y 3-opt vistas en la teórica. En INTERCAMBIAR solo considerábamos como vecindad las soluciones que estaban a un \emph{swap} de diferencia del mapeo fuente. En ese caso los \emph{swapeos} pueden considerarse como una rotación de solo dos elementos. En esta variación la vecindad estará compuesta por todas las soluciones que están a lo sumo a una rotación de 3 nodos de diferencia.
 
+La idea es que si tenenemos $(v_i, w_i), (v_j, w_j)$ y $(v_k, w_k)$ en un mapeo, los cambiamos por $(v_i, w_k), (v_j, w_i)$ y $(v_k, w_j)$. En particular $i \neq j$ siempre, pero tanto $i$ como $j$ pueden ser iguales a $k$. En esos casos estamos considerando los swapeos de $i$ y $j$. Por tal razón, la vecindad de INTERCAMBIAR es un subconjunto de la vecindad de 3-ROTACION.
+ 
 \begin{algorithm}[H]
   \small
   \begin{algorithmic}[1]
@@ -149,6 +155,12 @@ Esta vecindad sigue un principio muy parecido al de INTERCAMBIAR. La idea surge 
                 \Comment $O(n_1)$
                 \State $mejore \gets true$
                 \Comment $O(1)$
+              \Else
+              \Comment No me muevo a soluciones igual o peores
+                \State $swap(source.isomorfismo[k].first, source.isomorfismo[j].first)$
+                \Comment $O(1)$
+                \State $swap(source.isomorfismo[i].first, source.isomorfismo[k].first)$
+                \Comment $O(1)$
               \EndIf
             \EndFor
           \EndFor
@@ -169,13 +181,7 @@ Para hallar una cota en peor caso para la cantidad de iteraciones (que vale para
 
 Es importante destacar que podría pasar que $G_2$ tenga menos aristas pero que las mismas usen más vértices de los que tiene $G_1$. Además si $m_2 < m_1$, $O(m_2) \subset O(m_1)$. Por eso está bien que sea $O(m_1)$ y no $O(min\{m_1, m_2\})$.
 
-% Ahora bien no cuesta mucho darse cuenta en la práctica que esta cota puede ser realmente grosera por más de una razón: 
-% \begin{itemize}
-% \item por un lado asumimos una solución realmente mala: si bien en la sección respectiva vimos un ejemplo dónde la heurística se porta así de mal, no es esperable que en general de resultados tan malos;
-% \item por otra parte asumimos que en cada iteración se mejora en exactamente un arista cuando la solución es $O(m_1)$. En general  
-% \end{itemize}
-
-En definitiva esta cota podría no ser alcanzable (nosotros no encontramos una instancia que la realice), pero seguro acota la cantidad de iteraciones y no pudimos encontrar una cota mejor en peor caso.
+En definitiva esta cota podría no ser alcanzable (nosotros no encontramos una instancia que la realice) pues realmente asumimos un escenario extremadamente malo. Sin embargo, no pudimos encontrar nada mejor, por lo que nos conformamos con esta.
 
 \subsubsection{Costo de las iteraciones}
 Debido a lo simple del pseudocódigo y de las complejidades que en él aparecen, es fácil llegar a que (álgebra de órdenes mediante) el costo de cada iteración de la búsqueda es 
@@ -189,7 +195,7 @@ Debido a lo simple del pseudocódigo y de las complejidades que en él aparecen,
 \subsection{Análisis de performance y calidad}
 En esta sección analizaremos las diferencias de calidad y tiempos de las tres búsquedas locales planteadas, tratando de determinar cuál es la que realiza el mejor \emph{trade-off}.
 
-El como se construyeron las instancias de prueba se encuentra detallado el apéndice.
+El como se construyeron las instancias de prueba se encuentra detallado en el apéndice.
 
 Es importante destacar que en lugar de tomar la cantidad de aristas o el tiempo en el que incurre cada búsqueda para cada instancia corrida, consideramos la diferencia de estos valores respecto de los mismos para la heurística golosa. Esto es razonable pues todas las búsquedas parten de calcular una solución golosa, por lo que probablemente resultaría más confuso para la comparación si se graficaran los datos en bruto.
 
